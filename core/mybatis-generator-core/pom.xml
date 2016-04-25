@@ -124,6 +124,27 @@
 
   <dependencies>
     <dependency>
+      <groupId>net.sf.jsqlparser</groupId>
+      <artifactId>jsqlparser</artifactId>
+      <version>0.8.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.antlrjavaparser</groupId>
+      <artifactId>antlr-java-parser</artifactId>
+      <version>1.0.17</version>
+    </dependency>
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-master</artifactId>
+      <version>4.5.1</version>
+    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.antlr</groupId>-->
+      <!--<artifactId>antlr4</artifactId>-->
+      <!--<version>4.5</version>-->
+    <!--</dependency>-->
+
+    <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <scope>provided</scope>

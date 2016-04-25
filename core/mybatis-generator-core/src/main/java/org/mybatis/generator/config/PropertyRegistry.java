@@ -54,6 +54,8 @@ public class PropertyRegistry {
     public static final String CONTEXT_JAVA_FILE_ENCODING = "javaFileEncoding"; //$NON-NLS-1$
     public static final String CONTEXT_JAVA_FORMATTER = "javaFormatter"; //$NON-NLS-1$
     public static final String CONTEXT_XML_FORMATTER = "xmlFormatter"; //$NON-NLS-1$
+    /** 生产xmlMapper的时候是否采用合并 */
+    public static final String CONTEXT_XML_MERGABLE = "xmlMergable";
 
     public static final String CLIENT_USE_LEGACY_BUILDER = "useLegacyBuilder"; //$NON-NLS-1$
     

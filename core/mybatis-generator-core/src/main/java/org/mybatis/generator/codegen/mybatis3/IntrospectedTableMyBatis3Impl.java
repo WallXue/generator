@@ -266,10 +266,20 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
 
         if (xmlMapperGenerator != null) {
             Document document = xmlMapperGenerator.getDocument();
+            /**
+             * 设置 isMergeable = false； 在生成 xml文件的时候，将不是合并，而是直接覆盖；
+             * 增加判断
+             */
+            String tmp = context.getProperty("xmlMergable");
+            boolean xmlMergable = true;
+            if("false".equalsIgnoreCase(tmp)){
+                xmlMergable = true;
+            }
             GeneratedXmlFile gxf = new GeneratedXmlFile(document,
                 getMyBatis3XmlMapperFileName(), getMyBatis3XmlMapperPackage(),
                 context.getSqlMapGeneratorConfiguration().getTargetProject(),
-                true, context.getXmlFormatter());
+                    xmlMergable, context.getXmlFormatter());
+
             if (context.getPlugins().sqlMapGenerated(gxf, this)) {
                 answer.add(gxf);
             }
