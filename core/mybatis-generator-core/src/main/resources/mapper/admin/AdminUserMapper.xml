@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper/admin.AdminUserMapper">
+  <resultMap id="BaseResultMap" type="com.wins.shop.entity.admin.AdminUser">
+    <id column="suid" jdbcType="BIGINT" property="suid" />
+    <result column="suname" jdbcType="VARCHAR" property="suname" />
+    <result column="saccount" jdbcType="VARCHAR" property="saccount" />
+    <result column="passwd" jdbcType="VARCHAR" property="passwd" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="state" jdbcType="TINYINT" property="state" />
+    <result column="last_update" jdbcType="TIMESTAMP" property="lastUpdate" />
+    <result column="modifier" jdbcType="BIGINT" property="modifier" />
+    <result column="rname" jdbcType="VARCHAR" property="rname" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    suid, suname, saccount, passwd, create_time, state, last_update, modifier, rname
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admin_user
+    where suid = #{suid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from admin_user
+    where suid = #{suid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wins.shop.entity.admin.AdminUser">
+    insert into admin_user (suid, suname, saccount, 
+      passwd, create_time, state, 
+      last_update, modifier, rname
+      )
+    values (#{suid,jdbcType=BIGINT}, #{suname,jdbcType=VARCHAR}, #{saccount,jdbcType=VARCHAR}, 
+      #{passwd,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{state,jdbcType=TINYINT}, 
+      #{lastUpdate,jdbcType=TIMESTAMP}, #{modifier,jdbcType=BIGINT}, #{rname,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wins.shop.entity.admin.AdminUser">
+    insert into admin_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="suid != null">
+        suid,
+      </if>
+      <if test="suname != null">
+        suname,
+      </if>
+      <if test="saccount != null">
+        saccount,
+      </if>
+      <if test="passwd != null">
+        passwd,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="lastUpdate != null">
+        last_update,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="rname != null">
+        rname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="suid != null">
+        #{suid,jdbcType=BIGINT},
+      </if>
+      <if test="suname != null">
+        #{suname,jdbcType=VARCHAR},
+      </if>
+      <if test="saccount != null">
+        #{saccount,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null">
+        #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="lastUpdate != null">
+        #{lastUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=BIGINT},
+      </if>
+      <if test="rname != null">
+        #{rname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wins.shop.entity.admin.AdminUser">
+    update admin_user
+    <set>
+      <if test="suname != null">
+        suname = #{suname,jdbcType=VARCHAR},
+      </if>
+      <if test="saccount != null">
+        saccount = #{saccount,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null">
+        passwd = #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="lastUpdate != null">
+        last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null">
+        modifier = #{modifier,jdbcType=BIGINT},
+      </if>
+      <if test="rname != null">
+        rname = #{rname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where suid = #{suid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wins.shop.entity.admin.AdminUser">
+    update admin_user
+    set suname = #{suname,jdbcType=VARCHAR},
+      saccount = #{saccount,jdbcType=VARCHAR},
+      passwd = #{passwd,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=TINYINT},
+      last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=BIGINT},
+      rname = #{rname,jdbcType=VARCHAR}
+    where suid = #{suid,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.wins.shop.entity.admin.AdminUser">
+    <id column="suid" jdbcType="BIGINT" property="suid" />
+    <result column="suname" jdbcType="VARCHAR" property="suname" />
+    <result column="saccount" jdbcType="VARCHAR" property="saccount" />
+    <result column="passwd" jdbcType="VARCHAR" property="passwd" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="state" jdbcType="TINYINT" property="state" />
+    <result column="last_update" jdbcType="TIMESTAMP" property="lastUpdate" />
+    <result column="modifier" jdbcType="BIGINT" property="modifier" />
+    <result column="rname" jdbcType="VARCHAR" property="rname" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    suid, suname, saccount, passwd, create_time, state, last_update, modifier, rname
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admin_user
+    where suid = #{suid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from admin_user
+    where suid = #{suid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wins.shop.entity.admin.AdminUser">
+    insert into admin_user (suid, suname, saccount, 
+      passwd, create_time, state, 
+      last_update, modifier, rname
+      )
+    values (#{suid,jdbcType=BIGINT}, #{suname,jdbcType=VARCHAR}, #{saccount,jdbcType=VARCHAR}, 
+      #{passwd,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{state,jdbcType=TINYINT}, 
+      #{lastUpdate,jdbcType=TIMESTAMP}, #{modifier,jdbcType=BIGINT}, #{rname,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wins.shop.entity.admin.AdminUser">
+    insert into admin_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="suid != null">
+        suid,
+      </if>
+      <if test="suname != null">
+        suname,
+      </if>
+      <if test="saccount != null">
+        saccount,
+      </if>
+      <if test="passwd != null">
+        passwd,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="lastUpdate != null">
+        last_update,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="rname != null">
+        rname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="suid != null">
+        #{suid,jdbcType=BIGINT},
+      </if>
+      <if test="suname != null">
+        #{suname,jdbcType=VARCHAR},
+      </if>
+      <if test="saccount != null">
+        #{saccount,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null">
+        #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="lastUpdate != null">
+        #{lastUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=BIGINT},
+      </if>
+      <if test="rname != null">
+        #{rname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wins.shop.entity.admin.AdminUser">
+    update admin_user
+    <set>
+      <if test="suname != null">
+        suname = #{suname,jdbcType=VARCHAR},
+      </if>
+      <if test="saccount != null">
+        saccount = #{saccount,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null">
+        passwd = #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="lastUpdate != null">
+        last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null">
+        modifier = #{modifier,jdbcType=BIGINT},
+      </if>
+      <if test="rname != null">
+        rname = #{rname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where suid = #{suid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wins.shop.entity.admin.AdminUser">
+    update admin_user
+    set suname = #{suname,jdbcType=VARCHAR},
+      saccount = #{saccount,jdbcType=VARCHAR},
+      passwd = #{passwd,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=TINYINT},
+      last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=BIGINT},
+      rname = #{rname,jdbcType=VARCHAR}
+    where suid = #{suid,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.wins.shop.entity.admin.AdminUser">
+    <id column="suid" jdbcType="BIGINT" property="suid" />
+    <result column="suname" jdbcType="VARCHAR" property="suname" />
+    <result column="saccount" jdbcType="VARCHAR" property="saccount" />
+    <result column="passwd" jdbcType="VARCHAR" property="passwd" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="state" jdbcType="TINYINT" property="state" />
+    <result column="last_update" jdbcType="TIMESTAMP" property="lastUpdate" />
+    <result column="modifier" jdbcType="BIGINT" property="modifier" />
+    <result column="rname" jdbcType="VARCHAR" property="rname" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    suid, suname, saccount, passwd, create_time, state, last_update, modifier, rname
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admin_user
+    where suid = #{suid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from admin_user
+    where suid = #{suid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wins.shop.entity.admin.AdminUser">
+    insert into admin_user (suid, suname, saccount, 
+      passwd, create_time, state, 
+      last_update, modifier, rname
+      )
+    values (#{suid,jdbcType=BIGINT}, #{suname,jdbcType=VARCHAR}, #{saccount,jdbcType=VARCHAR}, 
+      #{passwd,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{state,jdbcType=TINYINT}, 
+      #{lastUpdate,jdbcType=TIMESTAMP}, #{modifier,jdbcType=BIGINT}, #{rname,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wins.shop.entity.admin.AdminUser">
+    insert into admin_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="suid != null">
+        suid,
+      </if>
+      <if test="suname != null">
+        suname,
+      </if>
+      <if test="saccount != null">
+        saccount,
+      </if>
+      <if test="passwd != null">
+        passwd,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="lastUpdate != null">
+        last_update,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="rname != null">
+        rname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="suid != null">
+        #{suid,jdbcType=BIGINT},
+      </if>
+      <if test="suname != null">
+        #{suname,jdbcType=VARCHAR},
+      </if>
+      <if test="saccount != null">
+        #{saccount,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null">
+        #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="lastUpdate != null">
+        #{lastUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=BIGINT},
+      </if>
+      <if test="rname != null">
+        #{rname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wins.shop.entity.admin.AdminUser">
+    update admin_user
+    <set>
+      <if test="suname != null">
+        suname = #{suname,jdbcType=VARCHAR},
+      </if>
+      <if test="saccount != null">
+        saccount = #{saccount,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null">
+        passwd = #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="lastUpdate != null">
+        last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null">
+        modifier = #{modifier,jdbcType=BIGINT},
+      </if>
+      <if test="rname != null">
+        rname = #{rname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where suid = #{suid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wins.shop.entity.admin.AdminUser">
+    update admin_user
+    set suname = #{suname,jdbcType=VARCHAR},
+      saccount = #{saccount,jdbcType=VARCHAR},
+      passwd = #{passwd,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=TINYINT},
+      last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=BIGINT},
+      rname = #{rname,jdbcType=VARCHAR}
+    where suid = #{suid,jdbcType=BIGINT}
+  </update>
+</mapper>

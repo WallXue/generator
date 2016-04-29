@@ -9,8 +9,13 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.mybatis.generator.api.ShellCallback;
 import org.mybatis.generator.exception.ShellException;
 import org.mybatis.generator.internal.DefaultShellCallback;
+import org.mybatis.generator.util.MergeUtil;
+import sun.nio.cs.StandardCharsets;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  * Created by silveringsea
@@ -37,20 +42,17 @@ public class AdvaMergeShellCallback extends DefaultShellCallback {
     @Override
     public String mergeJavaFile(String newFileSource, String existingFileFullPath, String[] javadocTags, String fileEncoding) throws ShellException {
         try {
-            Java7Lexer lexer = new Java7Lexer(new org.antlr.v4.runtime.ANTLRFileStream(existingFileFullPath, "UTF-8"));
-//            Java7Parser parser = new Java7Parser(new CommonTokenStream(lexer.token));
-//            CommonTree tree = new CommonTokenStream(lexer.get);
-//            int type = ((Integer) (Java7Lexer.class.getDeclaredField(existingFileFullPath).get(null))).intValue();
-
+            fileEncoding = fileEncoding == null? "UTF-8":fileEncoding;
+            return MergeUtil.merge2FileReserve(new ByteArrayInputStream(newFileSource.getBytes(fileEncoding)), new FileInputStream(existingFileFullPath));
         } catch (Throwable ex) {
-
+            ex.printStackTrace();
+            throw new ShellException(ex);
         }
-        return "";
     }
 
     @Override
     public void refreshProject(String project) {
-
+        super.refreshProject(project);
     }
 
     @Override

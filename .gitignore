@@ -6,6 +6,7 @@
 /core/build.log
 /core/target
 
+
 # /core/mybatis-generator-core/
 /core/mybatis-generator-core/.classpath
 /core/mybatis-generator-core/.project
