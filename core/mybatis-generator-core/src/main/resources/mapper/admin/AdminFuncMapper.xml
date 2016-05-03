@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper/admin.AdminFuncMapper">
+  <resultMap id="BaseResultMap" type="com.wins.shop.entity.admin.AdminFunc">
+    <id column="func_id" jdbcType="BIGINT" property="funcId" />
+    <result column="func_name" jdbcType="VARCHAR" property="funcName" />
+    <result column="func_level" jdbcType="INTEGER" property="funcLevel" />
+    <result column="parent_func_id" jdbcType="BIGINT" property="parentFuncId" />
+    <result column="sort_id" jdbcType="INTEGER" property="sortId" />
+    <result column="func_url" jdbcType="VARCHAR" property="funcUrl" />
+    <result column="url_type" jdbcType="TINYINT" property="urlType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="status_time" jdbcType="TIMESTAMP" property="statusTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    func_id, func_name, func_level, parent_func_id, sort_id, func_url, url_type, create_time, 
+    status, status_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admin_func
+    where func_id = #{funcId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from admin_func
+    where func_id = #{funcId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wins.shop.entity.admin.AdminFunc">
+    insert into admin_func (func_id, func_name, func_level, 
+      parent_func_id, sort_id, func_url, 
+      url_type, create_time, status, 
+      status_time)
+    values (#{funcId,jdbcType=BIGINT}, #{funcName,jdbcType=VARCHAR}, #{funcLevel,jdbcType=INTEGER}, 
+      #{parentFuncId,jdbcType=BIGINT}, #{sortId,jdbcType=INTEGER}, #{funcUrl,jdbcType=VARCHAR}, 
+      #{urlType,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT}, 
+      #{statusTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wins.shop.entity.admin.AdminFunc">
+    insert into admin_func
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="funcId != null">
+        func_id,
+      </if>
+      <if test="funcName != null">
+        func_name,
+      </if>
+      <if test="funcLevel != null">
+        func_level,
+      </if>
+      <if test="parentFuncId != null">
+        parent_func_id,
+      </if>
+      <if test="sortId != null">
+        sort_id,
+      </if>
+      <if test="funcUrl != null">
+        func_url,
+      </if>
+      <if test="urlType != null">
+        url_type,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="statusTime != null">
+        status_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="funcId != null">
+        #{funcId,jdbcType=BIGINT},
+      </if>
+      <if test="funcName != null">
+        #{funcName,jdbcType=VARCHAR},
+      </if>
+      <if test="funcLevel != null">
+        #{funcLevel,jdbcType=INTEGER},
+      </if>
+      <if test="parentFuncId != null">
+        #{parentFuncId,jdbcType=BIGINT},
+      </if>
+      <if test="sortId != null">
+        #{sortId,jdbcType=INTEGER},
+      </if>
+      <if test="funcUrl != null">
+        #{funcUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="urlType != null">
+        #{urlType,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="statusTime != null">
+        #{statusTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wins.shop.entity.admin.AdminFunc">
+    update admin_func
+    <set>
+      <if test="funcName != null">
+        func_name = #{funcName,jdbcType=VARCHAR},
+      </if>
+      <if test="funcLevel != null">
+        func_level = #{funcLevel,jdbcType=INTEGER},
+      </if>
+      <if test="parentFuncId != null">
+        parent_func_id = #{parentFuncId,jdbcType=BIGINT},
+      </if>
+      <if test="sortId != null">
+        sort_id = #{sortId,jdbcType=INTEGER},
+      </if>
+      <if test="funcUrl != null">
+        func_url = #{funcUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="urlType != null">
+        url_type = #{urlType,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="statusTime != null">
+        status_time = #{statusTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where func_id = #{funcId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wins.shop.entity.admin.AdminFunc">
+    update admin_func
+    set func_name = #{funcName,jdbcType=VARCHAR},
+      func_level = #{funcLevel,jdbcType=INTEGER},
+      parent_func_id = #{parentFuncId,jdbcType=BIGINT},
+      sort_id = #{sortId,jdbcType=INTEGER},
+      func_url = #{funcUrl,jdbcType=VARCHAR},
+      url_type = #{urlType,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=TINYINT},
+      status_time = #{statusTime,jdbcType=TIMESTAMP}
+    where func_id = #{funcId,jdbcType=BIGINT}
+  </update>
+</mapper>
