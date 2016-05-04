@@ -1,35 +1,44 @@
 package org.mybatis.generator.ext.daomapper.elements;
 
-import org.mybatis.generator.api.IntrospectedTable;
+import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.java.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 /**
  */
-public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
-
-    @Override
-    public void setIntrospectedTable(IntrospectedTable introspectedTable) {
-        super.setIntrospectedTable(introspectedTable);
-    }
+public class SelectByPrimaryKeyClientGenerator extends AbstractDaoMapperMethodGenerator {
 
     protected Method generateMethod(Set<FullyQualifiedJavaType> importedTypes) {
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
-
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName("getMax" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "Id");
+        method.setName(introspectedTable.getDeleteByPrimaryKeyStatementId());
 
         //only one primary key
-        if (introspectedTable.getPrimaryKeyColumns().size() == 1) {
-//            FullyQualifiedJavaType type = new FullyQualifiedJavaType(
-//                    introspectedTable.getPrimaryKeyType());
-//            importedTypes.add(type);
-            //method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
+        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+            FullyQualifiedJavaType type = new FullyQualifiedJavaType(
+                    introspectedTable.getPrimaryKeyType());
+            importedTypes.add(type);
+            method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
         } else {
-            return null;
+            // no primary key class - fields are in the base class
+            // if more than one PK field, then we need to annotate the
+            // parameters
+            // for MyBatis
+            List<IntrospectedColumn> introspectedColumns = introspectedTable
+                    .getPrimaryKeyColumns();
+            StringBuilder sb = new StringBuilder();
+            for (IntrospectedColumn introspectedColumn : introspectedColumns) {
+                FullyQualifiedJavaType type = introspectedColumn
+                        .getFullyQualifiedJavaType();
+                importedTypes.add(type);
+                Parameter parameter = new Parameter(type, introspectedColumn
+                        .getJavaProperty());
+                method.addParameter(parameter);
+            }
         }
 
         context.getCommentGenerator().addGeneralMethodComment(method,
@@ -58,7 +67,7 @@ public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
         sb.append("return (");
-        sb.append(introspectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType().getShortName());
+        sb.append(importedTypes.iterator().next().getShortName());
         sb.append(")getMaxId(\");");
         sb.append(method.getName());
         sb.append("\"); ");

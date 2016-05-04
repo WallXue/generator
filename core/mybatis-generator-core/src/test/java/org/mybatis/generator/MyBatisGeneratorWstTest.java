@@ -22,7 +22,6 @@ import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.exception.InvalidConfigurationException;
 import org.mybatis.generator.ext.api.AdvaMergeShellCallback;
-import org.mybatis.generator.internal.DefaultShellCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ public class MyBatisGeneratorWstTest {
     public void testGenerateMyBatis3() throws Exception {
         List<String> warnings = new ArrayList<String>();
         ConfigurationParser cp = new ConfigurationParser(warnings);
-        Configuration config = cp.parseConfiguration(this.getClass().getClassLoader().getResourceAsStream("generatorConfigMyBatisForWst.xml"));
+        Configuration config = cp.parseConfiguration(this.getClass().getClassLoader().getResourceAsStream("generatorConfig4Wst.xml"));
             
         //DefaultShellCallback shellCallback = new DefaultShellCallback(true);
         ShellCallback shellCallback = new AdvaMergeShellCallback(true);
@@ -46,6 +45,8 @@ public class MyBatisGeneratorWstTest {
             assertEquals(2, e.getErrors().size());
             throw e;
         }
+
+        assertEquals(1, 1);
     }
 
 //    @Test(expected=InvalidConfigurationException.class)
