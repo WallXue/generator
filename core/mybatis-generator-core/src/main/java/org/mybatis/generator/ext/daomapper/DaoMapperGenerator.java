@@ -11,7 +11,9 @@ import org.mybatis.generator.codegen.mybatis3.xmlmapper.XMLMapperGenerator;
 import org.mybatis.generator.config.PropertyRegistry;
 import org.mybatis.generator.ext.codegen.IntrospectedTableDecorator;
 import org.mybatis.generator.ext.daomapper.elements.AbstractDaoMapperMethodGenerator;
+import org.mybatis.generator.ext.daomapper.elements.DeleteByPKMethodGenerator;
 import org.mybatis.generator.ext.daomapper.elements.GetMaxIdClientGenerator;
+import org.mybatis.generator.ext.daomapper.elements.InsertBeanMethodGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,18 +26,22 @@ import static org.mybatis.generator.internal.util.messages.Messages.getString;
 public class DaoMapperGenerator extends AbstractJavaClientGenerator {
 
     protected IntrospectedTable introspectedTableDecorator;
+    protected String basePackage;
+    FullyQualifiedJavaType entityType;
 
     public DaoMapperGenerator( ) {
         super(true);
     }
 
-    @Override
     public void setIntrospectedTable(IntrospectedTable introspectedTable) {
         this.introspectedTableDecorator = IntrospectedTableDecorator.newProxyInstance((IntrospectedTableMyBatis3Impl)introspectedTable);
         super.setIntrospectedTable(introspectedTable);
+
+
+        String targetPackage = context.getJavaClientGeneratorConfiguration().getTargetPackage();
+        basePackage = targetPackage.substring(0, targetPackage.indexOf(".dao."));
     }
 
-    @Override
     public AbstractXmlGenerator getMatchedXMLGenerator() {
         return new XMLMapperGenerator();
     }
@@ -48,7 +54,6 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         methodGenerator.setWarnings(warnings);
     }
 
-    @Override
     public List<CompilationUnit> getCompilationUnits() {
         progressCallback.startTask(getString("Progress.17", //$NON-NLS-1$
                 introspectedTableDecorator.getFullyQualifiedTable().toString()));
@@ -85,6 +90,9 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         }
 
         addMaxIdMethod(interfaze);
+        addDeleteByPrimaryKeyMethod(interfaze);
+        addInsertMethod(interfaze);
+
         return interfaze;
     }
 
@@ -93,57 +101,49 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
      */
     protected TopLevelClass generateImpl(Interface interfaces) {
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(
-                introspectedTable.getDAOImplementationType());
+                introspectedTableDecorator.getDAOImplementationType());
         CommentGenerator commentGenerator = context.getCommentGenerator();
         TopLevelClass topLevelClass = new TopLevelClass(type);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         commentGenerator.addJavaFileComment(topLevelClass);
 
+        entityType = new FullyQualifiedJavaType(context.getJavaModelGeneratorConfiguration().getTargetPackage() + "." + introspectedTable.getFullyQualifiedTable().getDomainObjectName());
+        topLevelClass.addImportedType(entityType);
+        topLevelClass.addImportedType(basePackage + ".dao.impl.BaseDaoImp");
         topLevelClass.addImportedType(interfaces.getType());
+        topLevelClass.setSuperClass("BaseDaoImp<" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + ">");
         topLevelClass.addSuperInterface(interfaces.getType());
         commentGenerator.addModelClassComment(topLevelClass, introspectedTable);
 
         addMaxIdMethod(topLevelClass);
+        addDeleteByPrimaryKeyMethod(topLevelClass);
+        addInsertMethod(topLevelClass);
+
         return topLevelClass;
     }
 
-//    /**
-//     * 数目的方法
-//     * @param interfaze
-//     */
-//    protected void addCountByExampleMethod(Interface interfaze) {
-//        AbstractJavaMapperMethodGenerator methodGenerator = new CountByExampleMethodGenerator();
-//        initializeAndExecuteGenerator(methodGenerator, interfaze);
-//    }
+    /**
+     * 根据主键删除
+     */
+    protected void addDeleteByPrimaryKeyMethod(JavaElement element) {
+        AbstractDaoMapperMethodGenerator methodGenerator = new DeleteByPKMethodGenerator();
+        initializeAndExecuteGenerator(methodGenerator);
+        if (element instanceof Interface) {
+            methodGenerator.addInterfaceElements((Interface)element);
+        } else if (element instanceof TopLevelClass){
+            methodGenerator.addTopLevelClassElements((TopLevelClass)element);
+        }
+    }
 
-//    /**
-//     * 删除的方法
-//     * @param interfaze
-//     */
-//    protected void addDeleteByExampleMethod(Interface interfaze) {
-//        if (introspectedTable.getRules().generateDeleteByExample()) {
-//            AbstractJavaMapperMethodGenerator methodGenerator = new DeleteByExampleMethodGenerator();
-//            initializeAndExecuteGenerator(methodGenerator, interfaze);
-//        }
-//    }
-
-//    /**
-//     * 根据主键删除
-//     * @param interfaze
-//     */
-//    protected void addDeleteByPrimaryKeyMethod(Interface interfaze) {
-//        if (!introspectedTable.getRules().generateDeleteByPrimaryKey()) {
-//            AbstractJavaMapperMethodGenerator methodGenerator = new DeleteByPrimaryKeyMethodGenerator(false);
-//            initializeAndExecuteGenerator(methodGenerator, interfaze);
-//        }
-//    }
-//
-//    protected void addInsertMethod(Interface interfaze) {
-//        if (introspectedTable.getRules().generateInsert()) {
-//            AbstractJavaMapperMethodGenerator methodGenerator = new InsertMethodGenerator(false);
-//            initializeAndExecuteGenerator(methodGenerator, interfaze);
-//        }
-//    }
+    protected void addInsertMethod(JavaElement element) {
+        AbstractDaoMapperMethodGenerator methodGenerator = new InsertBeanMethodGenerator();
+        initializeAndExecuteGenerator(methodGenerator);
+        if (element instanceof Interface) {
+            methodGenerator.addInterfaceElements((Interface)element);
+        } else if (element instanceof TopLevelClass){
+            methodGenerator.addTopLevelClassElements((TopLevelClass)element);
+        }
+    }
 
     protected void addMaxIdMethod(JavaElement element) {
         AbstractDaoMapperMethodGenerator methodGenerator = new GetMaxIdClientGenerator();

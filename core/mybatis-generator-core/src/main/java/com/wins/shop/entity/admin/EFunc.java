@@ -1,9 +1,9 @@
 package com.wins.shop.entity.admin;
-
 import java.io.Serializable;
 import java.util.Date;
 
 public class EFunc implements Serializable {
+
     private Long funcId;
 
     private String funcName;

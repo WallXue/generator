@@ -8,9 +8,8 @@ import java.util.TreeSet;
 
 /**
  */
-public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
+public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator {
 
-    @Override
     public void setIntrospectedTable(IntrospectedTable introspectedTable) {
         super.setIntrospectedTable(introspectedTable);
     }
@@ -20,24 +19,14 @@ public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
 
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName("getMax" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "Id");
-
-        //only one primary key
-        if (introspectedTable.getPrimaryKeyColumns().size() == 1) {
-//            FullyQualifiedJavaType type = new FullyQualifiedJavaType(
-//                    introspectedTable.getPrimaryKeyType());
-//            importedTypes.add(type);
-            //method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
-        } else {
-            return null;
-        }
+        method.setName("add" + introspectedTable.getFullyQualifiedTable().getDomainObjectName());
+        //method.addParameter(new Parameter(introspectedTable.getPrimaryKeyType(), "key"));
 
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);
         return method;
     }
 
-    @Override
     public void addInterfaceElements(Interface interfaze) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = generateMethod(importedTypes);
@@ -48,7 +37,6 @@ public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
         interfaze.addMethod(method);
     }
 
-    @Override
     public void addTopLevelClassElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = generateMethod(importedTypes);
@@ -57,19 +45,19 @@ public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
 
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
-        sb.append("return (");
-        sb.append(introspectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType().getShortName());
-        sb.append(")getMaxId(\"");
+        sb.append("return ");
+        sb.append("saveAndFetch(\"");
         sb.append(method.getName());
         sb.append("\"); ");
         sb.append(';');
         method.addBodyLine(sb.toString());
 
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(
-                    introspectedTable.getPrimaryKeyType());
+                introspectedTable.getPrimaryKeyType());
 
 
         topLevelClass.addImportedTypes(importedTypes);
         topLevelClass.addMethod(method);
     }
 }
+

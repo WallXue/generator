@@ -13,6 +13,7 @@
     <orderEntry type="library" name="Maven: com.github.antlrjavaparser:antlr-java-parser:1.0.17" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:antlr4:4.5.1" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:antlr4-master:4.5.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.4" level="project" />
     <orderEntry type="library" name="Maven: cglib:cglib-nodep:3.1" level="project" />
     <orderEntry type="library" name="Maven: org.reflections:reflections:0.9.10" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:15.0" level="project" />

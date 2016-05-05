@@ -8,7 +8,7 @@ import java.util.TreeSet;
 
 /**
  */
-public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
+public class DeleteByPKMethodGenerator extends AbstractDaoMapperMethodGenerator {
 
     @Override
     public void setIntrospectedTable(IntrospectedTable introspectedTable) {
@@ -20,14 +20,10 @@ public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
 
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName("getMax" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "Id");
+        method.setName("delete" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "ById");
 
         //only one primary key
         if (introspectedTable.getPrimaryKeyColumns().size() == 1) {
-//            FullyQualifiedJavaType type = new FullyQualifiedJavaType(
-//                    introspectedTable.getPrimaryKeyType());
-//            importedTypes.add(type);
-            //method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
         } else {
             return null;
         }
@@ -57,19 +53,17 @@ public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
 
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
-        sb.append("return (");
-        sb.append(introspectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType().getShortName());
-        sb.append(")getMaxId(\"");
-        sb.append(method.getName());
+        sb.append("return ");
+        sb.append("deleteById(\"deleteByPrimaryKey\"");
         sb.append("\"); ");
         sb.append(';');
         method.addBodyLine(sb.toString());
 
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(
-                    introspectedTable.getPrimaryKeyType());
-
+                introspectedTable.getPrimaryKeyType());
 
         topLevelClass.addImportedTypes(importedTypes);
         topLevelClass.addMethod(method);
     }
 }
+
