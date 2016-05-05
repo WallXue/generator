@@ -48,3 +48,6 @@
 /core/mybatis-generator-systests-domtests/.project
 /core/mybatis-generator-systests-domtests/.settings
 /core/mybatis-generator-systests-domtests/target
+/core/*.iml
+/core/mybatis-generator-core/*.iml
+/core/.idea

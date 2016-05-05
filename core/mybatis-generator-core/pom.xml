@@ -138,6 +138,11 @@
       <artifactId>antlr4-master</artifactId>
       <version>4.5.1</version>
     </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.4</version>
+    </dependency>
     <!--<dependency>-->
       <!--<groupId>org.antlr</groupId>-->
       <!--<artifactId>antlr4</artifactId>-->
@@ -165,6 +170,11 @@
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <version>3.1</version>
     </dependency>
   </dependencies>
 
