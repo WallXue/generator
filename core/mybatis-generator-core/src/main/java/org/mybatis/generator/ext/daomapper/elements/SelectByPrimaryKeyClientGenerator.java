@@ -73,5 +73,7 @@ public class SelectByPrimaryKeyClientGenerator extends AbstractDaoMapperMethodGe
         sb.append("\"); ");
         sb.append(';');
         method.addBodyLine(sb.toString());
+        topLevelClass.addImportedTypes(importedTypes);
+        topLevelClass.addMethod(method);
     }
 }

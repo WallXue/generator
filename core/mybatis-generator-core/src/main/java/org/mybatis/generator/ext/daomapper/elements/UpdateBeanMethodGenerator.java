@@ -8,11 +8,13 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * 新增entity方法：
- * xxx addxxx(xxx entity) { return saveAndFetch("insertXXX", user); }
+ * 生成update单个bean的, 生成比如下面的格式
+ * updateUser(User user) {
+ return update("updateUserSelective", user);
  */
-public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator {
+public class UpdateBeanMethodGenerator extends AbstractDaoMapperMethodGenerator {
 
+    @Override
     public void setIntrospectedTable(IntrospectedTable introspectedTable) {
         super.setIntrospectedTable(introspectedTable);
     }
@@ -21,9 +23,8 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
 
-        FullyQualifiedJavaType entityType = GenUtil.getEntityType(context, introspectedTable);
-        method.setReturnType(entityType);
-        method.setName("add" + introspectedTable.getFullyQualifiedTable().getDomainObjectName());
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.setName("update" + introspectedTable.getFullyQualifiedTable().getDomainObjectName());
         method.addParameter(new Parameter(GenUtil.getEntityType(context, introspectedTable), "entity"));
 
         context.getCommentGenerator().addGeneralMethodComment(method,
@@ -31,6 +32,7 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         return method;
     }
 
+    @Override
     public void addInterfaceElements(Interface interfaze) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = generateMethod(importedTypes);
@@ -41,6 +43,7 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         interfaze.addMethod(method);
     }
 
+    @Override
     public void addTopLevelClassElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = generateMethod(importedTypes);
@@ -50,13 +53,12 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
         sb.append("return ");
-        sb.append("saveAndFetch(\"");
-        sb.append(method.getName());
-        sb.append("\",　entity); ");
+        sb.append("update(\"updateByPrimaryKeySelective\"");
+        sb.append("\", entity); ");
         sb.append(';');
         method.addBodyLine(sb.toString());
 
+        topLevelClass.addImportedTypes(importedTypes);
         topLevelClass.addMethod(method);
     }
 }
-

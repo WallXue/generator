@@ -1,5 +1,6 @@
 package org.mybatis.generator.ext.daomapper.elements;
 
+import org.apache.commons.lang.StringUtils;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.util.GenUtil;
@@ -8,11 +9,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * 新增entity方法：
- * xxx addxxx(xxx entity) { return saveAndFetch("insertXXX", user); }
+ * Created by Administrator on 5/6/2016.
  */
-public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator {
+public class SelectByBeanMethodGenerator extends AbstractDaoMapperMethodGenerator {
 
+    @Override
     public void setIntrospectedTable(IntrospectedTable introspectedTable) {
         super.setIntrospectedTable(introspectedTable);
     }
@@ -21,9 +22,14 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
 
-        FullyQualifiedJavaType entityType = GenUtil.getEntityType(context, introspectedTable);
-        method.setReturnType(entityType);
-        method.setName("add" + introspectedTable.getFullyQualifiedTable().getDomainObjectName());
+//        List<User>
+        String entityName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+        String entityParaName = StringUtils.lowerCase(entityName);
+
+        FullyQualifiedJavaType listType = FullyQualifiedJavaType.getNewListInstance();
+        method.setReturnType(new FullyQualifiedJavaType("List<" + entityName + ">"));
+        importedTypes.add(listType);
+        method.setName("select" + entityName + "ByBean");
         method.addParameter(new Parameter(GenUtil.getEntityType(context, introspectedTable), "entity"));
 
         context.getCommentGenerator().addGeneralMethodComment(method,
@@ -31,6 +37,7 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         return method;
     }
 
+    @Override
     public void addInterfaceElements(Interface interfaze) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = generateMethod(importedTypes);
@@ -41,6 +48,7 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         interfaze.addMethod(method);
     }
 
+    @Override
     public void addTopLevelClassElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = generateMethod(importedTypes);
@@ -50,13 +58,13 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
         sb.append("return ");
-        sb.append("saveAndFetch(\"");
-        sb.append(method.getName());
-        sb.append("\",　entity); ");
+        sb.append("findByProperty(\"select\"");
+        sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
+        sb.append("\", entity); ");
         sb.append(';');
         method.addBodyLine(sb.toString());
 
+        topLevelClass.addImportedTypes(importedTypes);
         topLevelClass.addMethod(method);
     }
 }
-

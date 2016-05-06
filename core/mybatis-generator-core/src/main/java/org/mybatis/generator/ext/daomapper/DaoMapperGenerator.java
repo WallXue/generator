@@ -1,5 +1,6 @@
 package org.mybatis.generator.ext.daomapper;
 
+import org.apache.commons.lang.StringUtils;
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
@@ -10,10 +11,8 @@ import org.mybatis.generator.codegen.mybatis3.javamapper.elements.AbstractJavaMa
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.XMLMapperGenerator;
 import org.mybatis.generator.config.PropertyRegistry;
 import org.mybatis.generator.ext.codegen.IntrospectedTableDecorator;
-import org.mybatis.generator.ext.daomapper.elements.AbstractDaoMapperMethodGenerator;
-import org.mybatis.generator.ext.daomapper.elements.DeleteByPKMethodGenerator;
-import org.mybatis.generator.ext.daomapper.elements.GetMaxIdClientGenerator;
-import org.mybatis.generator.ext.daomapper.elements.InsertBeanMethodGenerator;
+import org.mybatis.generator.ext.daomapper.elements.*;
+import org.mybatis.generator.util.GenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,6 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
 
     protected IntrospectedTable introspectedTableDecorator;
     protected String basePackage;
-    FullyQualifiedJavaType entityType;
 
     public DaoMapperGenerator( ) {
         super(true);
@@ -107,8 +105,8 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         commentGenerator.addJavaFileComment(topLevelClass);
 
-        entityType = new FullyQualifiedJavaType(context.getJavaModelGeneratorConfiguration().getTargetPackage() + "." + introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-        topLevelClass.addImportedType(entityType);
+        topLevelClass.addAnnotation("@Repository(" + StringUtils.uncapitalize(interfaces.getType().getShortName()) + ")");
+        topLevelClass.addImportedType(GenUtil.getEntityType(context, introspectedTable));
         topLevelClass.addImportedType(basePackage + ".dao.impl.BaseDaoImp");
         topLevelClass.addImportedType(interfaces.getType());
         topLevelClass.setSuperClass("BaseDaoImp<" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + ">");
@@ -135,6 +133,10 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         }
     }
 
+    /**
+     * 新增
+     * @param element
+     */
     protected void addInsertMethod(JavaElement element) {
         AbstractDaoMapperMethodGenerator methodGenerator = new InsertBeanMethodGenerator();
         initializeAndExecuteGenerator(methodGenerator);
@@ -145,8 +147,22 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         }
     }
 
+    /**
+     * 取最大id值， 当主键只有一个的时候
+     * @param element
+     */
     protected void addMaxIdMethod(JavaElement element) {
         AbstractDaoMapperMethodGenerator methodGenerator = new GetMaxIdClientGenerator();
+        initializeAndExecuteGenerator(methodGenerator);
+        if (element instanceof Interface) {
+            methodGenerator.addInterfaceElements((Interface)element);
+        } else if (element instanceof TopLevelClass){
+            methodGenerator.addTopLevelClassElements((TopLevelClass)element);
+        }
+    }
+
+    protected void addUpdateMethod(JavaElement element) {
+        AbstractDaoMapperMethodGenerator methodGenerator = new UpdateBeanMethodGenerator();
         initializeAndExecuteGenerator(methodGenerator);
         if (element instanceof Interface) {
             methodGenerator.addInterfaceElements((Interface)element);
