@@ -6,14 +6,10 @@ import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.config.MergeConstants;
-import org.mybatis.generator.config.PropertyRegistry;
-import org.mybatis.generator.internal.DefaultCommentGenerator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
-
-import static org.mybatis.generator.internal.util.StringUtility.isTrue;
 
 /**
  * 修改注释方法，
@@ -45,7 +41,7 @@ public class AdvaCommentGenerator implements CommentGenerator {
         compilationUnit.addFileCommentLine("/*");
         compilationUnit.addFileCommentLine(" * file comment: " + compilationUnit.getType().getShortName() + ".java");
         compilationUnit.addFileCommentLine(" * Copyright(C) All rights reserved. ");
-        compilationUnit.addFileCommentLine(" * " + sdf.format(new Date()) + " Created");
+//        compilationUnit.addFileCommentLine(" * " + sdf.format(new Date()) + " Created");
         compilationUnit.addFileCommentLine(" */");
     }
 
@@ -56,7 +52,7 @@ public class AdvaCommentGenerator implements CommentGenerator {
 
     @Override
     public void addRootComment(XmlElement rootElement) {
-
+        System.out.println(rootElement);
     }
 
     /**
@@ -69,7 +65,7 @@ public class AdvaCommentGenerator implements CommentGenerator {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         innerClass.addJavaDocLine("/**");
         innerClass.addJavaDocLine(" * class comment:  " + introspectedTable.getRemarks()); //introspectedTable.getFullyQualifiedTable().getRemarks
-        innerClass.addJavaDocLine(" * @version 0.1" + sdf.format(new Date()));
+//        innerClass.addJavaDocLine(" * @version 0.1" + sdf.format(new Date()));
         innerClass.addJavaDocLine(" */");
 //        super.addClassComment(innerClass, introspectedTable);
     }

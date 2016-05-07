@@ -12,11 +12,12 @@
 	<context id="MySqlTables" targetRuntime="MyBatis3">
 		<!--  生成的pojo，将implements Serializable -->
 		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>  
-		<commentGenerator>
+		<commentGenerator type="org.mybatis.generator.ext.AdvaCommentGenerator">
 			<property name="suppressAllComments" value="true" />
+			<property name="suppressDate" value="true" />
 		</commentGenerator>
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://mysql.master:8606/wst_admin" userId="root" password="asdf">
+			connectionURL="jdbc:mysql://mysql.master:8606/wst_admin" userId="root" password="AA">
 		</jdbcConnection>
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false" />
@@ -26,9 +27,12 @@
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
+
 		<sqlMapGenerator targetPackage="mapper/admin"
-			targetProject="src/main/resources">
+			targetProject="src/main/resources" >
 			<property name="enableSubPackages" value="true" />
+			<!-- 设置为false时候直接覆盖 -->
+			<property name="xmlMergable" value="false" />
 		</sqlMapGenerator>
 
 		<javaClientGenerator type="org.mybatis.generator.ext.daomapper.DaoMapperGenerator" targetPackage="com.wins.shop.dao.admin"

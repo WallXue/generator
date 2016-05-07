@@ -8,10 +8,10 @@ import org.mybatis.generator.codegen.AbstractJavaClientGenerator;
 import org.mybatis.generator.codegen.AbstractXmlGenerator;
 import org.mybatis.generator.codegen.mybatis3.IntrospectedTableMyBatis3Impl;
 import org.mybatis.generator.codegen.mybatis3.javamapper.elements.AbstractJavaMapperMethodGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.XMLMapperGenerator;
 import org.mybatis.generator.config.PropertyRegistry;
 import org.mybatis.generator.ext.codegen.IntrospectedTableDecorator;
 import org.mybatis.generator.ext.daomapper.elements.*;
+import org.mybatis.generator.ext.xmlmapper.XMLExtMapperGenerator;
 import org.mybatis.generator.util.GenUtil;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
     }
 
     public AbstractXmlGenerator getMatchedXMLGenerator() {
-        return new XMLMapperGenerator();
+        return new XMLExtMapperGenerator();
     }
 
     protected void initializeAndExecuteGenerator(
@@ -90,6 +90,9 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         addMaxIdMethod(interfaze);
         addDeleteByPrimaryKeyMethod(interfaze);
         addInsertMethod(interfaze);
+        addUpdateMethod(interfaze);
+        addSelectByPrimaryKeyMethod(interfaze);
+        addSelectByBeanMethod(interfaze);
 
         return interfaze;
     }
@@ -105,10 +108,14 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         commentGenerator.addJavaFileComment(topLevelClass);
 
-        topLevelClass.addAnnotation("@Repository(" + StringUtils.uncapitalize(interfaces.getType().getShortName()) + ")");
+        topLevelClass.addAnnotation("@Repository(\"" + StringUtils.uncapitalize(interfaces.getType().getShortName()) + "\")");
         topLevelClass.addImportedType(GenUtil.getEntityType(context, introspectedTable));
         topLevelClass.addImportedType(basePackage + ".dao.impl.BaseDaoImp");
         topLevelClass.addImportedType(interfaces.getType());
+        topLevelClass.addImportedType("org.springframework.stereotype.Repository");
+        topLevelClass.addImportedType("org.springframework.beans.factory.annotation.Qualifier");
+        topLevelClass.addImportedType("org.springframework.beans.factory.annotation.Autowired");
+
         topLevelClass.setSuperClass("BaseDaoImp<" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + ">");
         topLevelClass.addSuperInterface(interfaces.getType());
         commentGenerator.addModelClassComment(topLevelClass, introspectedTable);
@@ -116,6 +123,10 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         addMaxIdMethod(topLevelClass);
         addDeleteByPrimaryKeyMethod(topLevelClass);
         addInsertMethod(topLevelClass);
+        addUpdateMethod(topLevelClass);
+        addSelectByPrimaryKeyMethod(topLevelClass);
+        addSelectByBeanMethod(topLevelClass);
+        addSqlRepositoryMethod(topLevelClass);
 
         return topLevelClass;
     }
@@ -169,5 +180,42 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         } else if (element instanceof TopLevelClass){
             methodGenerator.addTopLevelClassElements((TopLevelClass)element);
         }
+    }
+
+    /**
+     *
+     * @param element
+     */
+    protected void addSelectByBeanMethod(JavaElement element) {
+        AbstractDaoMapperMethodGenerator methodGenerator = new SelectByBeanMethodGenerator();
+        initializeAndExecuteGenerator(methodGenerator);
+        if (element instanceof Interface) {
+            methodGenerator.addInterfaceElements((Interface)element);
+        } else if (element instanceof TopLevelClass){
+            methodGenerator.addTopLevelClassElements((TopLevelClass)element);
+        }
+    }
+
+    /**
+     *
+     * @param element
+     */
+    protected void addSelectByPrimaryKeyMethod(JavaElement element) {
+        AbstractDaoMapperMethodGenerator methodGenerator = new SelectByPrimaryKeyClientGenerator();
+        initializeAndExecuteGenerator(methodGenerator);
+        if (element instanceof Interface) {
+            methodGenerator.addInterfaceElements((Interface)element);
+        } else if (element instanceof TopLevelClass){
+            methodGenerator.addTopLevelClassElements((TopLevelClass)element);
+        }
+    }
+
+    /**
+     *
+     * @param element
+     */
+    protected void addSqlRepositoryMethod(TopLevelClass element) {
+        SqlSessionFactoryMethodGenerator sqlSessionFactoryMethodGenerator = new SqlSessionFactoryMethodGenerator();
+        sqlSessionFactoryMethodGenerator.addTopLevelClassElements(element);
     }
 }

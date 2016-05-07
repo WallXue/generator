@@ -2,6 +2,7 @@ package org.mybatis.generator.ext.daomapper.elements;
 
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.java.*;
+import org.mybatis.generator.util.GenUtil;
 
 import java.util.List;
 import java.util.Set;
@@ -14,35 +15,27 @@ public class SelectByPrimaryKeyClientGenerator extends AbstractDaoMapperMethodGe
     protected Method generateMethod(Set<FullyQualifiedJavaType> importedTypes) {
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName(introspectedTable.getDeleteByPrimaryKeyStatementId());
 
-        //only one primary key
-        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
-            FullyQualifiedJavaType type = new FullyQualifiedJavaType(
-                    introspectedTable.getPrimaryKeyType());
+        FullyQualifiedJavaType beanType = GenUtil.getEntityType(context, introspectedTable);
+        importedTypes.add(beanType);
+        method.setReturnType(beanType);
+        method.setName(introspectedTable.getSelectByPrimaryKeyStatementId());
+
+        List<IntrospectedColumn> introspectedColumns = introspectedTable
+                .getPrimaryKeyColumns();
+        StringBuilder sb = new StringBuilder();
+        for (IntrospectedColumn introspectedColumn : introspectedColumns) {
+            FullyQualifiedJavaType type = introspectedColumn
+                    .getFullyQualifiedJavaType();
             importedTypes.add(type);
-            method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
-        } else {
-            // no primary key class - fields are in the base class
-            // if more than one PK field, then we need to annotate the
-            // parameters
-            // for MyBatis
-            List<IntrospectedColumn> introspectedColumns = introspectedTable
-                    .getPrimaryKeyColumns();
-            StringBuilder sb = new StringBuilder();
-            for (IntrospectedColumn introspectedColumn : introspectedColumns) {
-                FullyQualifiedJavaType type = introspectedColumn
-                        .getFullyQualifiedJavaType();
-                importedTypes.add(type);
-                Parameter parameter = new Parameter(type, introspectedColumn
-                        .getJavaProperty());
-                method.addParameter(parameter);
-            }
+            Parameter parameter = new Parameter(type, introspectedColumn
+                    .getJavaProperty());
+            method.addParameter(parameter);
         }
 
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);
+
         return method;
     }
 
@@ -65,14 +58,21 @@ public class SelectByPrimaryKeyClientGenerator extends AbstractDaoMapperMethodGe
             return;
 
         method.setVisibility(JavaVisibility.PUBLIC);
-        StringBuilder sb = new StringBuilder();
-        sb.append("return (");
-        sb.append(importedTypes.iterator().next().getShortName());
-        sb.append(")getMaxId(\");");
-        sb.append(method.getName());
-        sb.append("\"); ");
-        sb.append(';');
-        method.addBodyLine(sb.toString());
+        List<IntrospectedColumn> introspectedColumns = introspectedTable
+                .getPrimaryKeyColumns();
+        if (introspectedColumns.size() == 1) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("return ");
+            sb.append("getPojoById(\"selectByPrimaryKey\"");
+            sb.append(", ");
+            sb.append(method.getParameters().get(0).getName());
+            sb.append("); ");
+            method.addBodyLine(sb.toString());
+
+        } else {
+
+        }
+
         topLevelClass.addImportedTypes(importedTypes);
         topLevelClass.addMethod(method);
     }

@@ -15,9 +15,6 @@
  */
 package org.mybatis.generator.codegen.mybatis3;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.mybatis.generator.api.GeneratedJavaFile;
 import org.mybatis.generator.api.GeneratedXmlFile;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -38,6 +35,9 @@ import org.mybatis.generator.codegen.mybatis3.model.RecordWithBLOBsGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.XMLMapperGenerator;
 import org.mybatis.generator.config.PropertyRegistry;
 import org.mybatis.generator.internal.ObjectFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class IntrospectedTableMyBatis3Impl.
@@ -270,10 +270,10 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
              * 设置 isMergeable = false； 在生成 xml文件的时候，将不是合并，而是直接覆盖；
              * 增加判断
              */
-            String tmp = context.getProperty("xmlMergable");
+            String tmp = context.getSqlMapGeneratorConfiguration().getProperty("xmlMergable");
             boolean xmlMergable = true;
             if("false".equalsIgnoreCase(tmp)){
-                xmlMergable = true;
+                xmlMergable = false;
             }
             GeneratedXmlFile gxf = new GeneratedXmlFile(document,
                 getMyBatis3XmlMapperFileName(), getMyBatis3XmlMapperPackage(),

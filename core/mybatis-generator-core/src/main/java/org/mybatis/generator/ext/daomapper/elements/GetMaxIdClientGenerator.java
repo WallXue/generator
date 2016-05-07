@@ -2,6 +2,7 @@ package org.mybatis.generator.ext.daomapper.elements;
 
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
+import org.mybatis.generator.util.GenUtil;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -18,20 +19,13 @@ public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
     protected Method generateMethod(Set<FullyQualifiedJavaType> importedTypes) {
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
-
-        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName("getMax" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "Id");
-
         //only one primary key
-        if (introspectedTable.getPrimaryKeyColumns().size() == 1) {
-//            FullyQualifiedJavaType type = new FullyQualifiedJavaType(
-//                    introspectedTable.getPrimaryKeyType());
-//            importedTypes.add(type);
-            //method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
-        } else {
+        if (introspectedTable.getPrimaryKeyColumns().size() != 1) {
             return null;
         }
 
+        method.setReturnType(introspectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType());
+        method.setName(GenUtil.getMaxIdExpression(introspectedTable));
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);
         return method;
@@ -62,7 +56,6 @@ public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
         sb.append(")getMaxId(\"");
         sb.append(method.getName());
         sb.append("\"); ");
-        sb.append(';');
         method.addBodyLine(sb.toString());
 
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(

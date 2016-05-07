@@ -54,8 +54,7 @@ public class UpdateBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         StringBuilder sb = new StringBuilder();
         sb.append("return ");
         sb.append("update(\"updateByPrimaryKeySelective\"");
-        sb.append("\", entity); ");
-        sb.append(';');
+        sb.append(", entity); ");
         method.addBodyLine(sb.toString());
 
         topLevelClass.addImportedTypes(importedTypes);

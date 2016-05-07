@@ -3,6 +3,7 @@ package org.mybatis.generator.ext.daomapper.elements;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.util.GenUtil;
+import org.mybatis.generator.util.StringUtil;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -23,8 +24,12 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
 
         FullyQualifiedJavaType entityType = GenUtil.getEntityType(context, introspectedTable);
         method.setReturnType(entityType);
+        importedTypes.add(entityType);
+        String entityName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+        String entityParaName = StringUtil.lowerCase(entityName);
+
         method.setName("add" + introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-        method.addParameter(new Parameter(GenUtil.getEntityType(context, introspectedTable), "entity"));
+        method.addParameter(new Parameter(GenUtil.getEntityType(context, introspectedTable), entityParaName));
 
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);
@@ -50,12 +55,13 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
         sb.append("return ");
-        sb.append("saveAndFetch(\"");
-        sb.append(method.getName());
-        sb.append("\",　entity); ");
-        sb.append(';');
+        sb.append("saveAndFetch(\"insertSelective\"");
+        sb.append(", ");
+        sb.append(method.getParameters().get(0).getName());
+        sb.append(");");
         method.addBodyLine(sb.toString());
 
+        topLevelClass.addImportedTypes(importedTypes);
         topLevelClass.addMethod(method);
     }
 }

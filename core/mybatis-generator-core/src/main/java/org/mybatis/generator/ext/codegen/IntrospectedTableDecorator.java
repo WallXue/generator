@@ -50,12 +50,16 @@ public class IntrospectedTableDecorator extends IntrospectedTableMyBatis3Impl im
         return daoImpl;
     }
 
+    /**
+     * 将com.xxx.dao.user.XXDao 转换成 com.xxx.dao.intf.user.IXXDao
+     */
     public String getDAOInterfaceType() {
         String daoIntf = target.getDAOInterfaceType();
         if (!daoIntf.contains(".intf.")) {
             int firstLastIndex = daoIntf.lastIndexOf(".");
+            String daoName = daoIntf.substring(firstLastIndex + 1);
             int secLastIndex = daoIntf.substring(0, firstLastIndex).lastIndexOf(".");
-            daoIntf = daoIntf.substring(0, secLastIndex) + ".intf." + daoIntf.substring(secLastIndex + 1);
+            daoIntf = daoIntf.substring(0, secLastIndex) + ".intf." + daoIntf.substring(secLastIndex + 1, firstLastIndex) + ".I" + daoName;
             target.setDAOInterfaceType(daoIntf);
         }
 

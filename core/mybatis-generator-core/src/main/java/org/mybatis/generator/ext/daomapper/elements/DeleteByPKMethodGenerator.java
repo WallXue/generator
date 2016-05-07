@@ -1,8 +1,10 @@
 package org.mybatis.generator.ext.daomapper.elements;
 
+import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -22,10 +24,16 @@ public class DeleteByPKMethodGenerator extends AbstractDaoMapperMethodGenerator 
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName("delete" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "ById");
 
-        //only one primary key
-        if (introspectedTable.getPrimaryKeyColumns().size() == 1) {
-        } else {
-            return null;
+        List<IntrospectedColumn> introspectedColumns = introspectedTable
+                .getPrimaryKeyColumns();
+        StringBuilder sb = new StringBuilder();
+        for (IntrospectedColumn introspectedColumn : introspectedColumns) {
+            FullyQualifiedJavaType type = introspectedColumn
+                    .getFullyQualifiedJavaType();
+            importedTypes.add(type);
+            Parameter parameter = new Parameter(type, introspectedColumn
+                    .getJavaProperty());
+            method.addParameter(parameter);
         }
 
         context.getCommentGenerator().addGeneralMethodComment(method,
@@ -54,9 +62,9 @@ public class DeleteByPKMethodGenerator extends AbstractDaoMapperMethodGenerator 
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
         sb.append("return ");
-        sb.append("deleteById(\"deleteByPrimaryKey\"");
-        sb.append("\"); ");
-        sb.append(';');
+        sb.append("deleteById(\"deleteByPrimaryKey\", ");
+        sb.append(method.getParameters().get(0).getName());
+        sb.append("); ");
         method.addBodyLine(sb.toString());
 
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(
