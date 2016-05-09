@@ -15,6 +15,10 @@
  */
 package org.mybatis.generator;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.api.ShellCallback;
@@ -22,19 +26,17 @@ import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.exception.InvalidConfigurationException;
 import org.mybatis.generator.ext.api.AdvaMergeShellCallback;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.mybatis.generator.internal.DefaultShellCallback;
 
 import static org.junit.Assert.assertEquals;
 
-public class MyBatisGeneratorWstTest {
+public class MyBatisGeneratorExtTest {
 
     @Test
     public void testGenerateMyBatis3() throws Exception {
         List<String> warnings = new ArrayList<String>();
         ConfigurationParser cp = new ConfigurationParser(warnings);
-        Configuration config = cp.parseConfiguration(this.getClass().getClassLoader().getResourceAsStream("generatorConfig4Wst.xml"));
+        Configuration config = cp.parseConfiguration(this.getClass().getClassLoader().getResourceAsStream("generatorConfigExtTest.xml"));
 
         ShellCallback shellCallback = new AdvaMergeShellCallback(true);
         try {

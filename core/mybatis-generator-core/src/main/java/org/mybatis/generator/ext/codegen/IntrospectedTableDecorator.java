@@ -58,7 +58,7 @@ public class IntrospectedTableDecorator extends IntrospectedTableMyBatis3Impl im
         if (!daoImpl.contains(".impl.")) {
             int firstLastIndex = daoImpl.lastIndexOf(".");
             int secLastIndex = daoImpl.substring(0, firstLastIndex).lastIndexOf(".");
-            daoImpl = daoImpl.substring(0, secLastIndex) + ".impl." + daoImpl.substring(secLastIndex + 1);
+            daoImpl = daoImpl.substring(0, secLastIndex) + ".impl." + daoImpl.substring(secLastIndex + 1).replace("DAO", "Dao");
             target.setDAOImplementationType(daoImpl);
         }
 
@@ -74,7 +74,7 @@ public class IntrospectedTableDecorator extends IntrospectedTableMyBatis3Impl im
             int firstLastIndex = daoIntf.lastIndexOf(".");
             String daoName = daoIntf.substring(firstLastIndex + 1);
             int secLastIndex = daoIntf.substring(0, firstLastIndex).lastIndexOf(".");
-            daoIntf = daoIntf.substring(0, secLastIndex) + ".intf." + daoIntf.substring(secLastIndex + 1, firstLastIndex) + ".I" + daoName;
+            daoIntf = daoIntf.substring(0, secLastIndex) + ".intf." + daoIntf.substring(secLastIndex + 1, firstLastIndex) + ".I" + daoName.replace("DAO", "Dao");
             target.setDAOInterfaceType(daoIntf);
         }
 
