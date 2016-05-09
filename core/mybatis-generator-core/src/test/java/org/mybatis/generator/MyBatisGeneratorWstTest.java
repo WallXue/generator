@@ -30,13 +30,12 @@ import static org.junit.Assert.assertEquals;
 
 public class MyBatisGeneratorWstTest {
 
-    @Test(expected=InvalidConfigurationException.class)
+    @Test
     public void testGenerateMyBatis3() throws Exception {
         List<String> warnings = new ArrayList<String>();
         ConfigurationParser cp = new ConfigurationParser(warnings);
         Configuration config = cp.parseConfiguration(this.getClass().getClassLoader().getResourceAsStream("generatorConfig4Wst.xml"));
-            
-        //DefaultShellCallback shellCallback = new DefaultShellCallback(true);
+
         ShellCallback shellCallback = new AdvaMergeShellCallback(true);
         try {
             MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, shellCallback, warnings);

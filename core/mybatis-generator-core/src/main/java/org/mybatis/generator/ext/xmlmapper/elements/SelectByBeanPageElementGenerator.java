@@ -1,18 +1,3 @@
-/**
- *    Copyright 2006-2015 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package org.mybatis.generator.ext.xmlmapper.elements;
 
 import org.mybatis.generator.api.dom.xml.Attribute;
@@ -24,21 +9,20 @@ import org.mybatis.generator.util.GenUtil;
 
 /**
  */
-public class SelectByBeanElementGenerator extends
+public class SelectByBeanPageElementGenerator  extends
         AbstractXmlElementGenerator {
 
-    public SelectByBeanElementGenerator() {
+    public SelectByBeanPageElementGenerator() {
         super();
     }
 
-    @Override
     public void addElements(XmlElement parentElement) {
         if (introspectedTable.getPrimaryKeyColumns().size() != 1)
             return;
 
         XmlElement answer = new XmlElement("select");
         answer.addAttribute(new Attribute(
-                "id", GenUtil.getSelectByBeanMethodName(introspectedTable)));
+                "id", GenUtil.getSelectByBeanPageMethodName(introspectedTable)));
         answer.addAttribute(new Attribute("resultMap", introspectedTable.getBaseResultMapId()));
 
         String identityColumnType = (introspectedTable.getRules().generatePrimaryKeyClass())?
@@ -54,7 +38,7 @@ public class SelectByBeanElementGenerator extends
                 introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime() +
                 " where 1=1 "));
 
-        XmlElement includeSqlWhere = new XmlElement("include"); //$NON-NLS-1$
+        XmlElement includeSqlWhere = new XmlElement("include");
         includeSqlWhere.addAttribute(new Attribute("refid", GenUtil.genSqlWhereExpression(introspectedTable)));
         answer.addElement(includeSqlWhere);
 
@@ -62,6 +46,12 @@ public class SelectByBeanElementGenerator extends
         if (orderByClause != null) {
             answer.addElement(new TextElement(orderByClause));
         }
+
+        //分页控制
+        XmlElement pageSqlWhere = new XmlElement("if");
+        pageSqlWhere.addAttribute(new Attribute("test", "index != null and pageSize != null"));
+        pageSqlWhere.addElement(new TextElement("limit #{index,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}"));
+        answer.addElement(pageSqlWhere);
 
         parentElement.addElement(answer);
     }

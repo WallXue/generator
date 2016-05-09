@@ -1,6 +1,20 @@
+/**
+ *    Copyright 2006-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.mybatis.generator.ext.daomapper;
 
-import org.apache.commons.lang.StringUtils;
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
@@ -13,6 +27,7 @@ import org.mybatis.generator.ext.codegen.IntrospectedTableDecorator;
 import org.mybatis.generator.ext.daomapper.elements.*;
 import org.mybatis.generator.ext.xmlmapper.XMLExtMapperGenerator;
 import org.mybatis.generator.util.GenUtil;
+import org.mybatis.generator.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +108,8 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         addUpdateMethod(interfaze);
         addSelectByPrimaryKeyMethod(interfaze);
         addSelectByBeanMethod(interfaze);
+        addSelectCountMethod(interfaze);
+        addSelectByBeanPageMethod(interfaze);
 
         return interfaze;
     }
@@ -108,7 +125,7 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         commentGenerator.addJavaFileComment(topLevelClass);
 
-        topLevelClass.addAnnotation("@Repository(\"" + StringUtils.uncapitalize(interfaces.getType().getShortName()) + "\")");
+        topLevelClass.addAnnotation("@Repository(\"" + StringUtil.uncapitalize(topLevelClass.getType().getShortName()) + "\")");
         topLevelClass.addImportedType(GenUtil.getEntityType(context, introspectedTable));
         topLevelClass.addImportedType(basePackage + ".dao.impl.BaseDaoImp");
         topLevelClass.addImportedType(interfaces.getType());
@@ -126,6 +143,8 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         addUpdateMethod(topLevelClass);
         addSelectByPrimaryKeyMethod(topLevelClass);
         addSelectByBeanMethod(topLevelClass);
+        addSelectCountMethod(topLevelClass);
+        addSelectByBeanPageMethod(topLevelClass);
         addSqlRepositoryMethod(topLevelClass);
 
         return topLevelClass;
@@ -146,7 +165,6 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
 
     /**
      * 新增
-     * @param element
      */
     protected void addInsertMethod(JavaElement element) {
         AbstractDaoMapperMethodGenerator methodGenerator = new InsertBeanMethodGenerator();
@@ -160,7 +178,6 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
 
     /**
      * 取最大id值， 当主键只有一个的时候
-     * @param element
      */
     protected void addMaxIdMethod(JavaElement element) {
         AbstractDaoMapperMethodGenerator methodGenerator = new GetMaxIdClientGenerator();
@@ -172,6 +189,9 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         }
     }
 
+    /**
+     *
+     */
     protected void addUpdateMethod(JavaElement element) {
         AbstractDaoMapperMethodGenerator methodGenerator = new UpdateBeanMethodGenerator();
         initializeAndExecuteGenerator(methodGenerator);
@@ -184,7 +204,6 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
 
     /**
      *
-     * @param element
      */
     protected void addSelectByBeanMethod(JavaElement element) {
         AbstractDaoMapperMethodGenerator methodGenerator = new SelectByBeanMethodGenerator();
@@ -198,7 +217,6 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
 
     /**
      *
-     * @param element
      */
     protected void addSelectByPrimaryKeyMethod(JavaElement element) {
         AbstractDaoMapperMethodGenerator methodGenerator = new SelectByPrimaryKeyClientGenerator();
@@ -210,9 +228,28 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         }
     }
 
+    protected void addSelectByBeanPageMethod(JavaElement element) {
+        AbstractDaoMapperMethodGenerator methodGenerator = new SelectByBeanPageMethodGenerator();
+        initializeAndExecuteGenerator(methodGenerator);
+        if (element instanceof Interface) {
+            methodGenerator.addInterfaceElements((Interface)element);
+        } else if (element instanceof TopLevelClass){
+            methodGenerator.addTopLevelClassElements((TopLevelClass)element);
+        }
+    }
+
+    protected void addSelectCountMethod(JavaElement element) {
+        AbstractDaoMapperMethodGenerator methodGenerator = new SelectCountMethodGenerator();
+        initializeAndExecuteGenerator(methodGenerator);
+        if (element instanceof Interface) {
+            methodGenerator.addInterfaceElements((Interface)element);
+        } else if (element instanceof TopLevelClass){
+            methodGenerator.addTopLevelClassElements((TopLevelClass)element);
+        }
+    }
+
     /**
      *
-     * @param element
      */
     protected void addSqlRepositoryMethod(TopLevelClass element) {
         SqlSessionFactoryMethodGenerator sqlSessionFactoryMethodGenerator = new SqlSessionFactoryMethodGenerator();

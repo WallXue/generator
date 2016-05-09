@@ -1,3 +1,18 @@
+/**
+ *    Copyright 2006-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.mybatis.generator.ext.xmlmapper;
 
 import org.mybatis.generator.api.FullyQualifiedTable;
@@ -8,6 +23,8 @@ import org.mybatis.generator.codegen.AbstractXmlGenerator;
 import org.mybatis.generator.codegen.XmlConstants;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.*;
 import org.mybatis.generator.ext.xmlmapper.elements.SelectByBeanElementGenerator;
+import org.mybatis.generator.ext.xmlmapper.elements.SelectByBeanPageElementGenerator;
+import org.mybatis.generator.ext.xmlmapper.elements.SelectCountElementGenerator;
 import org.mybatis.generator.ext.xmlmapper.elements.SelectSqlWhereElementGenerator;
 
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
@@ -38,6 +55,8 @@ public class XMLExtMapperGenerator extends AbstractXmlGenerator {
 //        addBlobColumnListElement(answer);
         addSelectByPrimaryKeyElement(answer);
         addSelectByBeanElement(answer);
+        addSelectByBeanPageElement(answer);
+        addSelectCountElement(answer);
         addDeleteByPrimaryKeyElement(answer);
         addInsertElement(answer);
         addInsertSelectiveElement(answer);
@@ -74,7 +93,6 @@ public class XMLExtMapperGenerator extends AbstractXmlGenerator {
 
     /**
      * 生成 <sql id="select_where_sql">  <if test="uid != null and uid != ''"> 类似的格式
-     * @param parentElement
      */
     protected void addSelectSqlWhereElement(XmlElement parentElement) {
         AbstractXmlElementGenerator elementGenerator = new SelectSqlWhereElementGenerator();
@@ -82,75 +100,92 @@ public class XMLExtMapperGenerator extends AbstractXmlGenerator {
     }
 
     /**
-     * 生成 <sql id="select_where_sql">  <if test="uid != null and uid != ''"> 类似的格式
-     * @param parentElement
      */
     protected void addSelectByBeanElement(XmlElement parentElement) {
         AbstractXmlElementGenerator elementGenerator = new SelectByBeanElementGenerator();
         initializeAndExecuteGenerator(elementGenerator, parentElement);
     }
 
-    protected void addBlobColumnListElement(XmlElement parentElement) {
-        if (!introspectedTable.getRules().generateBlobColumnList())
-            return;
-
-        AbstractXmlElementGenerator elementGenerator = new BlobColumnListElementGenerator();
+    /**
+     */
+    protected void addSelectCountElement(XmlElement parentElement) {
+        AbstractXmlElementGenerator elementGenerator = new SelectCountElementGenerator();
         initializeAndExecuteGenerator(elementGenerator, parentElement);
     }
 
+//    protected void addBlobColumnListElement(XmlElement parentElement) {
+//        if (!introspectedTable.getRules().generateBlobColumnList())
+//            return;
+//
+//        AbstractXmlElementGenerator elementGenerator = new BlobColumnListElementGenerator();
+//        initializeAndExecuteGenerator(elementGenerator, parentElement);
+//    }
+
     protected void addSelectByPrimaryKeyElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateSelectByPrimaryKey())
+        if (!introspectedTable.getRules().generateSelectByPrimaryKey())
             return;
 
         AbstractXmlElementGenerator elementGenerator = new SelectByPrimaryKeyElementGenerator();
         initializeAndExecuteGenerator(elementGenerator, parentElement);
     }
 
+    /**
+     *
+     */
+    protected void addSelectByBeanPageElement(XmlElement parentElement) {
+        AbstractXmlElementGenerator elementGenerator = new SelectByBeanPageElementGenerator();
+        initializeAndExecuteGenerator(elementGenerator, parentElement);
+    }
+
     protected void addDeleteByPrimaryKeyElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
-            AbstractXmlElementGenerator elementGenerator = new DeleteByPrimaryKeyElementGenerator(false);
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
+        if (!introspectedTable.getRules().generateDeleteByPrimaryKey())
+            return;
+
+        AbstractXmlElementGenerator elementGenerator = new DeleteByPrimaryKeyElementGenerator(false);
+        initializeAndExecuteGenerator(elementGenerator, parentElement);
     }
 
     protected void addInsertElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateInsert()) {
-            AbstractXmlElementGenerator elementGenerator = new InsertElementGenerator(false);
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
+        if (!introspectedTable.getRules().generateInsert())
+            return;
+
+        AbstractXmlElementGenerator elementGenerator = new InsertElementGenerator(false);
+        initializeAndExecuteGenerator(elementGenerator, parentElement);
     }
 
     protected void addInsertSelectiveElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateInsertSelective()) {
-            AbstractXmlElementGenerator elementGenerator = new InsertSelectiveElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
+        if (!introspectedTable.getRules().generateInsertSelective())
+            return;
+
+        AbstractXmlElementGenerator elementGenerator = new InsertSelectiveElementGenerator();
+        initializeAndExecuteGenerator(elementGenerator, parentElement);
     }
 
     protected void addUpdateByPrimaryKeySelectiveElement(
             XmlElement parentElement) {
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeySelective()) {
-            AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeySelectiveElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
-
-    protected void addUpdateByPrimaryKeyWithBLOBsElement(
-            XmlElement parentElement) {
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs())
+        if (!introspectedTable.getRules().generateUpdateByPrimaryKeySelective())
             return;
 
-        AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithBLOBsElementGenerator();
+        AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeySelectiveElementGenerator();
         initializeAndExecuteGenerator(elementGenerator, parentElement);
     }
 
-    protected void addUpdateByPrimaryKeyWithoutBLOBsElement(
-            XmlElement parentElement) {
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithoutBLOBs()) {
-            AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithoutBLOBsElementGenerator(false);
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+//    protected void addUpdateByPrimaryKeyWithBLOBsElement(
+//            XmlElement parentElement) {
+//        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs())
+//            return;
+//
+//        AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithBLOBsElementGenerator();
+//        initializeAndExecuteGenerator(elementGenerator, parentElement);
+//    }
+
+//    protected void addUpdateByPrimaryKeyWithoutBLOBsElement(
+//            XmlElement parentElement) {
+//        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithoutBLOBs()) {
+//            AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithoutBLOBsElementGenerator(false);
+//            initializeAndExecuteGenerator(elementGenerator, parentElement);
+//        }
+//    }
 
     protected void initializeAndExecuteGenerator(
             AbstractXmlElementGenerator elementGenerator,
