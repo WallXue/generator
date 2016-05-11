@@ -21,11 +21,8 @@ import org.mybatis.generator.api.dom.xml.Document;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.AbstractXmlGenerator;
 import org.mybatis.generator.codegen.XmlConstants;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.*;
-import org.mybatis.generator.ext.xmlmapper.elements.SelectByBeanElementGenerator;
-import org.mybatis.generator.ext.xmlmapper.elements.SelectByBeanPageElementGenerator;
-import org.mybatis.generator.ext.xmlmapper.elements.SelectCountElementGenerator;
-import org.mybatis.generator.ext.xmlmapper.elements.SelectSqlWhereElementGenerator;
+import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.AbstractXmlElementGenerator;
+import org.mybatis.generator.ext.xmlmapper.elements.*;
 
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
@@ -125,7 +122,7 @@ public class XMLExtMapperGenerator extends AbstractXmlGenerator {
         if (!introspectedTable.getRules().generateSelectByPrimaryKey())
             return;
 
-        AbstractXmlElementGenerator elementGenerator = new SelectByPrimaryKeyElementGenerator();
+        AbstractXmlElementGenerator elementGenerator = new SelectByPKElementGenerator();
         initializeAndExecuteGenerator(elementGenerator, parentElement);
     }
 
@@ -141,7 +138,7 @@ public class XMLExtMapperGenerator extends AbstractXmlGenerator {
         if (!introspectedTable.getRules().generateDeleteByPrimaryKey())
             return;
 
-        AbstractXmlElementGenerator elementGenerator = new DeleteByPrimaryKeyElementGenerator(false);
+        AbstractXmlElementGenerator elementGenerator = new DeleteByPKElementGenerator(false);
         initializeAndExecuteGenerator(elementGenerator, parentElement);
     }
 
@@ -166,7 +163,7 @@ public class XMLExtMapperGenerator extends AbstractXmlGenerator {
         if (!introspectedTable.getRules().generateUpdateByPrimaryKeySelective())
             return;
 
-        AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeySelectiveElementGenerator();
+        AbstractXmlElementGenerator elementGenerator = new UpdateByBeanPKElementGenerator();
         initializeAndExecuteGenerator(elementGenerator, parentElement);
     }
 

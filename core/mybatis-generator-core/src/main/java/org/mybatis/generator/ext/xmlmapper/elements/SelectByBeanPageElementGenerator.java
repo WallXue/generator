@@ -37,7 +37,7 @@ public class SelectByBeanPageElementGenerator  extends
 
         XmlElement answer = new XmlElement("select");
         answer.addAttribute(new Attribute(
-                "id", GenUtil.getSelectByBeanPageMethodName(introspectedTable)));
+                "id", GenUtil.getSelectByBeanPageMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE)));
         answer.addAttribute(new Attribute("resultMap", introspectedTable.getBaseResultMapId()));
 
         String identityColumnType = (introspectedTable.getRules().generatePrimaryKeyClass())?

@@ -27,21 +27,31 @@ public class GenUtil {
     public static final String SELECT_BY_BEAN_METHODNAME = "selectByBeanMethodName";
     public static final String SELECT_BY_PRIMARYKEY_METHODNAME = "selectByPKMethodName";
     public static final String INSERT_BEAN_METHODNAME = "insertBeanMethodName";
+    public static final String INSERT_BEAN_SELECTIVE_METHODNAME = "insertBeanSelMethodName";
     public static final String DELETE_BY_PRIMARYKEY_METHODNAME = "deleteByPKMethodName";
     public static final String SELECT_COUNT_METHODNAME = "selectCountMethodName";
     public static final String SELECT_BY_BEAN_PAGE_METHODNAME = "selectByBeanPageMethodName";
     public static final String UPDATE_BY_BEAN_METHODNAME = "updateByBeanMethodName";
+    public static final String UPDATE_BY_BEANLIST_METHODNAME = "updateByBeanListMethodName";
 
     public static final String XML_MAX_ID_METHODNAME = "XML_maxIdMethodName";
     public static final String XML_SELECT_BY_BEAN_METHODNAME = "XML_selectByBeanMethodName";
     public static final String XML_SELECT_BY_PRIMARYKEY_METHODNAME = "XML_selectByPKMethodName";
     public static final String XML_INSERT_BEAN_METHODNAME = "XML_insertBeanMethodName";
+    public static final String XML_INSERT_BEAN_SELECTIVE_METHODNAME = "XML_insertBeanSelectiveMethodName";
     public static final String XML_DELETE_BY_PRIMARYKEY_METHODNAME = "XML_deleteByPKMethodName";
     public static final String XML_SELECT_COUNT_METHODNAME = "XML_selectCountMethodName";
     public static final String XML_SELECT_BY_BEAN_PAGE_METHODNAME = "XML_selectByBeanPageMethodName";
     public static final String XML_UPDATE_BY_BEAN_METHODNAME = "XML_updateByBeanMethodName";
+    public static final String XML_UPDATE_BY_BEANLIST_METHODNAME = "XML_updateByBeanListMethodName";
 
     public static final String GEN_COUNT_BY_PAGE = "genCountByPage";
+
+    public  static enum ENUM_METHOD_TYPE {
+        XML_TYPE,
+        DAO_TYPE,
+        REDIS_TYPE
+    };
     /**
      * @param context  上下文
      * @param introspectedTable 表结构
@@ -55,83 +65,78 @@ public class GenUtil {
     /**
      * @return 取最大值的method name
      */
-    public static String getMaxIdMethodName(IntrospectedTable introspectedTable, boolean isXml) {
-        String config = introspectedTable.getTableConfiguration().getProperty(isXml? XML_MAX_ID_METHODNAME : MAX_ID_METHODNAME);
+    public static String getMaxIdMethodName(IntrospectedTable introspectedTable, ENUM_METHOD_TYPE method_type) {
+        String propKey = method_type == ENUM_METHOD_TYPE.DAO_TYPE? MAX_ID_METHODNAME:XML_MAX_ID_METHODNAME;
+        String config = introspectedTable.getTableConfiguration().getProperty(propKey);
         if (config != null)
             return config;
 
-        return "getMax" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "Id";
-    }
-
-    public static String getMaxIdMethodName(IntrospectedTable introspectedTable) {
-        return getMaxIdMethodName(introspectedTable, false);
+        return "findMax" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "Id";
     }
 
     /**
      * @return 根据bean条件取 的method name
      */
-    public static String getSelectByBeanMethodName(IntrospectedTable introspectedTable, boolean isXml) {
-        String config = introspectedTable.getTableConfiguration().getProperty(isXml? XML_SELECT_BY_BEAN_METHODNAME: SELECT_BY_BEAN_METHODNAME);
+    public static String getSelectByBeanMethodName(IntrospectedTable introspectedTable, ENUM_METHOD_TYPE method_type) {
+        String propKey = method_type == ENUM_METHOD_TYPE.DAO_TYPE? SELECT_BY_BEAN_METHODNAME:XML_SELECT_BY_BEAN_METHODNAME;
+        String config = introspectedTable.getTableConfiguration().getProperty(propKey);
         if (config != null)
             return config;
 
-        return "select" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "List";
+        return "find" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "s"; //"select" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "List";
     }
 
-    public static String getSelectByBeanMethodName(IntrospectedTable introspectedTable) {
-        return getSelectByBeanMethodName(introspectedTable, false);
-    }
-
-    public static String getSelectByPrimaryKeyMethodName(IntrospectedTable introspectedTable, boolean isXml) {
-        String config = introspectedTable.getTableConfiguration().getProperty(isXml? XML_SELECT_BY_PRIMARYKEY_METHODNAME:SELECT_BY_PRIMARYKEY_METHODNAME);
+    public static String getSelectByPrimaryKeyMethodName(IntrospectedTable introspectedTable, ENUM_METHOD_TYPE method_type) {
+        String propKey = method_type == ENUM_METHOD_TYPE.DAO_TYPE? SELECT_BY_PRIMARYKEY_METHODNAME:XML_SELECT_BY_PRIMARYKEY_METHODNAME;
+        String config = introspectedTable.getTableConfiguration().getProperty(propKey);
         if (config != null)
             return config;
 
-        return "select" + introspectedTable.getFullyQualifiedTable().getDomainObjectName();
-    }
-
-    public static String getSelectByPrimaryKeyMethodName(IntrospectedTable introspectedTable) {
-        return getSelectByPrimaryKeyMethodName(introspectedTable, false);
+        return "find" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "ById";// "select" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "byId";
     }
 
     /**
      * @return 分页方法method Name
      */
-    public static String getSelectByBeanPageMethodName(IntrospectedTable introspectedTable, boolean isXml) {
-        String config = introspectedTable.getTableConfiguration().getProperty(isXml? XML_SELECT_BY_BEAN_PAGE_METHODNAME: SELECT_BY_BEAN_PAGE_METHODNAME);
+    public static String getSelectByBeanPageMethodName(IntrospectedTable introspectedTable, ENUM_METHOD_TYPE method_type) {
+        String propKey = method_type == ENUM_METHOD_TYPE.DAO_TYPE? SELECT_BY_BEAN_PAGE_METHODNAME:XML_SELECT_BY_BEAN_PAGE_METHODNAME;
+        String config = introspectedTable.getTableConfiguration().getProperty(propKey);
         if (config != null)
             return config;
 
         return "select" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "ByPage";
     }
 
-    public static String getSelectByBeanPageMethodName(IntrospectedTable introspectedTable) {
-        return getSelectByBeanPageMethodName(introspectedTable, false);
-    }
-
     /**
      * @return 查询数量
      */
-    public static String getSelectCountMethodName(IntrospectedTable introspectedTable, boolean isXml) {
-        String config = introspectedTable.getTableConfiguration().getProperty(isXml? XML_SELECT_COUNT_METHODNAME: SELECT_COUNT_METHODNAME);
+    public static String getSelectCountMethodName(IntrospectedTable introspectedTable, ENUM_METHOD_TYPE method_type) {
+        String propKey = method_type == ENUM_METHOD_TYPE.DAO_TYPE? SELECT_COUNT_METHODNAME:XML_SELECT_COUNT_METHODNAME;
+        String config = introspectedTable.getTableConfiguration().getProperty(propKey);
         if (config != null)
             return config;
 
-        return "select" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "Count";
-    }
-
-    /**
-     * @return 查询数量
-     */
-    public static String getSelectCountMethodName(IntrospectedTable introspectedTable) {
-        return getSelectCountMethodName(introspectedTable, false);
+        return "getTotal" + introspectedTable.getFullyQualifiedTable().getDomainObjectName();//return "select" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "Count";
     }
 
     /**
      * @return 插入语句method Name
      */
-    public static String getInsertBeanMethodName(IntrospectedTable introspectedTable) {
-        String config = introspectedTable.getTableConfiguration().getProperty(INSERT_BEAN_METHODNAME);
+    public static String getInsertBeanMethodName(IntrospectedTable introspectedTable, ENUM_METHOD_TYPE method_type) {
+        String propKey = method_type == ENUM_METHOD_TYPE.DAO_TYPE? INSERT_BEAN_METHODNAME:XML_INSERT_BEAN_METHODNAME;
+        String config = introspectedTable.getTableConfiguration().getProperty(propKey);
+        if (config != null)
+            return config;
+
+        return "add" + introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+    }
+
+    /**
+     * @return 插入语句method Name
+     */
+    public static String getInsertBeanSelectiveMethodName(IntrospectedTable introspectedTable, ENUM_METHOD_TYPE method_type) {
+        String propKey = method_type == ENUM_METHOD_TYPE.DAO_TYPE? INSERT_BEAN_SELECTIVE_METHODNAME:XML_INSERT_BEAN_SELECTIVE_METHODNAME;
+        String config = introspectedTable.getTableConfiguration().getProperty(propKey);
         if (config != null)
             return config;
 
@@ -141,8 +146,9 @@ public class GenUtil {
     /**
      * @return 根据主键删除的method Name
      */
-    public static String getDeleteByPrimaryKeyMethodName(IntrospectedTable introspectedTable) {
-        String config = introspectedTable.getTableConfiguration().getProperty(DELETE_BY_PRIMARYKEY_METHODNAME);
+    public static String getDeleteByPrimaryKeyMethodName(IntrospectedTable introspectedTable, ENUM_METHOD_TYPE method_type) {
+        String propKey = method_type == ENUM_METHOD_TYPE.DAO_TYPE? DELETE_BY_PRIMARYKEY_METHODNAME:XML_DELETE_BY_PRIMARYKEY_METHODNAME;
+        String config = introspectedTable.getTableConfiguration().getProperty(propKey);
         if (config != null)
             return config;
 
@@ -152,12 +158,25 @@ public class GenUtil {
     /**
      * @return 更新语句methodName
      */
-    public static String getUpdateByBeanMethodName(IntrospectedTable introspectedTable) {
-        String config = introspectedTable.getTableConfiguration().getProperty(UPDATE_BY_BEAN_METHODNAME);
+    public static String getUpdateByBeanMethodName(IntrospectedTable introspectedTable, ENUM_METHOD_TYPE method_type) {
+        String propKey = method_type == ENUM_METHOD_TYPE.DAO_TYPE? UPDATE_BY_BEAN_METHODNAME:XML_UPDATE_BY_BEAN_METHODNAME;
+        String config = introspectedTable.getTableConfiguration().getProperty(propKey);
         if (config != null)
             return config;
 
         return "update" + introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+    }
+
+    /**
+     * @return 更新批量语句methodName  默认为update
+     */
+    public static String getUpdateByBeanListMethodName(IntrospectedTable introspectedTable, ENUM_METHOD_TYPE method_type) {
+        String propKey = method_type == ENUM_METHOD_TYPE.DAO_TYPE? UPDATE_BY_BEANLIST_METHODNAME:XML_UPDATE_BY_BEANLIST_METHODNAME;
+        String config = introspectedTable.getTableConfiguration().getProperty(propKey);
+        if (config != null)
+            return config;
+
+        return "updateList" + introspectedTable.getFullyQualifiedTable().getDomainObjectName();
     }
 
     /**

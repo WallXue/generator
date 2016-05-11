@@ -45,7 +45,7 @@ public class SelectByBeanMethodGenerator extends AbstractDaoMapperMethodGenerato
         FullyQualifiedJavaType entityType = GenUtil.getEntityType(context, introspectedTable);
         importedTypes.add(entityType);
 
-        method.setName(GenUtil.getSelectByBeanMethodName(introspectedTable));
+        method.setName(GenUtil.getSelectByBeanMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.DAO_TYPE));
         method.addParameter(new Parameter(entityType, entityParaName));
 
         context.getCommentGenerator().addGeneralMethodComment(method,
@@ -75,7 +75,7 @@ public class SelectByBeanMethodGenerator extends AbstractDaoMapperMethodGenerato
         StringBuilder sb = new StringBuilder();
         sb.append("return ");
         sb.append("findByProperty(\"");
-        sb.append(method.getName());
+        sb.append(GenUtil.getSelectByBeanMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE));
         sb.append("\", ");
         sb.append(method.getParameters().get(0).getName());
         sb.append(");");

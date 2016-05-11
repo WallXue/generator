@@ -38,7 +38,7 @@ public class DeleteByPKMethodGenerator extends AbstractDaoMapperMethodGenerator 
         method.setVisibility(JavaVisibility.PUBLIC);
 
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName(GenUtil.getDeleteByPrimaryKeyMethodName(introspectedTable));
+        method.setName(GenUtil.getDeleteByPrimaryKeyMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.DAO_TYPE));
 
         List<IntrospectedColumn> introspectedColumns = introspectedTable
                 .getPrimaryKeyColumns();
@@ -78,7 +78,9 @@ public class DeleteByPKMethodGenerator extends AbstractDaoMapperMethodGenerator 
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
         sb.append("return ");
-        sb.append("deleteById(\"deleteByPrimaryKey\", ");
+        sb.append("deleteById(\"");
+        sb.append(GenUtil.getDeleteByPrimaryKeyMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE));
+        sb.append("\", ");
         sb.append(method.getParameters().get(0).getName());
         sb.append("); ");
         method.addBodyLine(sb.toString());

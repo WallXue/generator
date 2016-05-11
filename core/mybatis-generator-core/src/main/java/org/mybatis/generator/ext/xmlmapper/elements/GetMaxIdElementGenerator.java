@@ -37,7 +37,7 @@ public class GetMaxIdElementGenerator extends
 
         XmlElement answer = new XmlElement("select");
         answer.addAttribute(new Attribute(
-                "id", GenUtil.getMaxIdMethodName(introspectedTable, true)));
+                "id", GenUtil.getMaxIdMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE)));
 
         String identityColumnType = (introspectedTable.getRules().generatePrimaryKeyClass())?
                 introspectedTable.getPrimaryKeyType():

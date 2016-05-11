@@ -37,7 +37,7 @@ public class SelectCountElementGenerator extends
 
         XmlElement answer = new XmlElement("select");
         answer.addAttribute(new Attribute(
-                "id", GenUtil.getSelectCountMethodName(introspectedTable, true)));
+                "id", GenUtil.getSelectCountMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE)));
         answer.addAttribute(new Attribute("resultType", "java.lang.Long"));
         answer.addAttribute(new Attribute("parameterType", introspectedTable.getBaseRecordType()));
 

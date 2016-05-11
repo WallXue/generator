@@ -43,7 +43,7 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         String entityName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
         String entityParaName = StringUtil.lowerCase(entityName);
 
-        method.setName(GenUtil.getInsertBeanMethodName(introspectedTable));
+        method.setName(GenUtil.getInsertBeanMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.DAO_TYPE));
         method.addParameter(new Parameter(GenUtil.getEntityType(context, introspectedTable), entityParaName));
 
         context.getCommentGenerator().addGeneralMethodComment(method,
@@ -70,7 +70,9 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
         sb.append("return ");
-        sb.append("saveAndFetch(\"insertSelective\"");
+        sb.append("saveAndFetch(\"");
+        sb.append(GenUtil.getInsertBeanMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE));
+        sb.append("\"");
         sb.append(", ");
         sb.append(method.getParameters().get(0).getName());
         sb.append(");");

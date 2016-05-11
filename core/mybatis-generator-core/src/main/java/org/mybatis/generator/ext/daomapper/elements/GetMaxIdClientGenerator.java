@@ -40,7 +40,7 @@ public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
         }
 
         method.setReturnType(introspectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType());
-        method.setName(GenUtil.getMaxIdMethodName(introspectedTable));
+        method.setName(GenUtil.getMaxIdMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.DAO_TYPE));
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);
         return method;
@@ -69,7 +69,7 @@ public class GetMaxIdClientGenerator extends AbstractDaoMapperMethodGenerator {
         sb.append("return (");
         sb.append(introspectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType().getShortName());
         sb.append(")getMaxId(\"");
-        sb.append(method.getName());
+        sb.append(GenUtil.getMaxIdMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE));
         sb.append("\"); ");
         method.addBodyLine(sb.toString());
 

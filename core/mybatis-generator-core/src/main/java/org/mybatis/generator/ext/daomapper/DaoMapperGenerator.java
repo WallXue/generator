@@ -125,7 +125,7 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         commentGenerator.addJavaFileComment(topLevelClass);
 
-        topLevelClass.addAnnotation("@Repository(\"" + StringUtil.uncapitalize(topLevelClass.getType().getShortName()) + "\")");
+        topLevelClass.addAnnotation("@Repository(\"" + StringUtil.uncapitalize(interfaces.getType().getShortName()) + "\")");
         topLevelClass.addImportedType(GenUtil.getEntityType(context, introspectedTable));
         topLevelClass.addImportedType(basePackage + ".dao.impl.BaseDaoImp");
         topLevelClass.addImportedType(interfaces.getType());

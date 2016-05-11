@@ -37,7 +37,7 @@ public class SelectCountMethodGenerator extends AbstractDaoMapperMethodGenerator
         method.setVisibility(JavaVisibility.PUBLIC);
 
         method.setReturnType(new FullyQualifiedJavaType("Long"));
-        method.setName(GenUtil.getSelectCountMethodName(introspectedTable));
+        method.setName(GenUtil.getSelectCountMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.DAO_TYPE));
         String entityName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
         String entityParaName = StringUtil.lowerCase(entityName);
         FullyQualifiedJavaType entityType = GenUtil.getEntityType(context, introspectedTable);
@@ -69,7 +69,7 @@ public class SelectCountMethodGenerator extends AbstractDaoMapperMethodGenerator
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
         sb.append("return (Long) getRowCount(\"");
-        sb.append(GenUtil.getSelectCountMethodName(introspectedTable, true));
+        sb.append(GenUtil.getSelectCountMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE));
         sb.append("\", ");
         sb.append(method.getParameters().get(0).getName());
         sb.append("); ");

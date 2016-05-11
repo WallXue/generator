@@ -36,7 +36,7 @@ public class SelectByBeanPageMethodGenerator extends SelectByBeanMethodGenerator
     @Override
     protected Method generateMethod(Set<FullyQualifiedJavaType> importedTypes) {
         Method method = super.generateMethod(importedTypes);
-        method.setName(GenUtil.getSelectByBeanPageMethodName(introspectedTable));
+        method.setName(GenUtil.getSelectByBeanPageMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.DAO_TYPE));
         return method;
     }
 

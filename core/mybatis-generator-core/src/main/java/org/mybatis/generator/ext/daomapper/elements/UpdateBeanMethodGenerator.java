@@ -40,7 +40,7 @@ public class UpdateBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         method.setVisibility(JavaVisibility.PUBLIC);
 
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName(GenUtil.getUpdateByBeanMethodName(introspectedTable));
+        method.setName(GenUtil.getUpdateByBeanMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.DAO_TYPE));
 
         FullyQualifiedJavaType entityType = GenUtil.getEntityType(context, introspectedTable);
         method.setReturnType(entityType);
@@ -76,7 +76,9 @@ public class UpdateBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
         sb.append("return ");
-        sb.append("update(\"updateByPrimaryKeySelective\"");
+        sb.append("update(\"");
+        sb.append(GenUtil.getUpdateByBeanMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE));
+        sb.append("\"");
         sb.append(", entity); ");
         method.addBodyLine(sb.toString());
 
