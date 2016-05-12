@@ -19,6 +19,10 @@ import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.config.Context;
 
+import java.io.File;
+
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
+
 /**
  */
 public class GenUtil {
@@ -184,5 +188,44 @@ public class GenUtil {
      */
     public static String genSqlWhereExpression(IntrospectedTable introspectedTable) {
         return "select_where_sql";
+    }
+
+    public static String getGeneralEntityParamName(IntrospectedTable introspectedTable) {
+        String entityName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+        return StringUtil.uncapitalize(entityName);
+    }
+    /**
+     * Gets the unique file name.
+     *
+     * @param directory
+     *            the directory
+     * @param fileName
+     *            the file name
+     * @return the unique file name
+     */
+    public static File getUniqueFileName(File directory, String fileName) {
+        File answer = null;
+
+        // try up to 1000 times to generate a unique file name
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i < 1000; i++) {
+            sb.setLength(0);
+            sb.append(fileName);
+            sb.append('.');
+            sb.append(i);
+
+            File testFile = new File(directory, sb.toString());
+            if (!testFile.exists()) {
+                answer = testFile;
+                break;
+            }
+        }
+
+        if (answer == null) {
+            throw new RuntimeException(getString(
+                    "RuntimeError.3", directory.getAbsolutePath())); //$NON-NLS-1$
+        }
+
+        return answer;
     }
 }

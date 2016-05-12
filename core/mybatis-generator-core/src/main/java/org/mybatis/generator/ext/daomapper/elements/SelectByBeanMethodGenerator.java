@@ -37,7 +37,7 @@ public class SelectByBeanMethodGenerator extends AbstractDaoMapperMethodGenerato
         method.setVisibility(JavaVisibility.PUBLIC);
 
         String entityName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
-        String entityParaName = StringUtil.lowerCase(entityName);
+        String entityParaName = GenUtil.getGeneralEntityParamName(introspectedTable);
 
         FullyQualifiedJavaType listType = FullyQualifiedJavaType.getNewListInstance();
         method.setReturnType(new FullyQualifiedJavaType("List<" + entityName + ">"));

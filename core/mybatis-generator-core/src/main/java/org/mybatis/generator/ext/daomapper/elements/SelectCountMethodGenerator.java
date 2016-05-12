@@ -38,8 +38,7 @@ public class SelectCountMethodGenerator extends AbstractDaoMapperMethodGenerator
 
         method.setReturnType(new FullyQualifiedJavaType("Long"));
         method.setName(GenUtil.getSelectCountMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.DAO_TYPE));
-        String entityName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
-        String entityParaName = StringUtil.lowerCase(entityName);
+        String entityParaName = GenUtil.getGeneralEntityParamName(introspectedTable);
         FullyQualifiedJavaType entityType = GenUtil.getEntityType(context, introspectedTable);
         importedTypes.add(entityType);
         method.addParameter(new Parameter(entityType, entityParaName));

@@ -43,10 +43,8 @@ public class UpdateBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         method.setName(GenUtil.getUpdateByBeanMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.DAO_TYPE));
 
         FullyQualifiedJavaType entityType = GenUtil.getEntityType(context, introspectedTable);
-        method.setReturnType(entityType);
         importedTypes.add(entityType);
-        String entityName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
-        String entityParaName = StringUtil.lowerCase(entityName);
+        String entityParaName = GenUtil.getGeneralEntityParamName(introspectedTable);
 
         method.addParameter(new Parameter(entityType, entityParaName));
 
@@ -79,7 +77,9 @@ public class UpdateBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         sb.append("update(\"");
         sb.append(GenUtil.getUpdateByBeanMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE));
         sb.append("\"");
-        sb.append(", entity); ");
+        sb.append(", ");
+        sb.append(method.getParameters().get(0).getName());
+        sb.append("); ");
         method.addBodyLine(sb.toString());
 
         topLevelClass.addImportedTypes(importedTypes);

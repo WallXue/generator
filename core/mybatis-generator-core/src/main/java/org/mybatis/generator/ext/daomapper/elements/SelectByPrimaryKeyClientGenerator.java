@@ -18,6 +18,7 @@ package org.mybatis.generator.ext.daomapper.elements;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.util.GenUtil;
+import org.mybatis.generator.util.StringUtil;
 
 import java.util.List;
 import java.util.Set;
@@ -38,7 +39,6 @@ public class SelectByPrimaryKeyClientGenerator extends AbstractDaoMapperMethodGe
 
         List<IntrospectedColumn> introspectedColumns = introspectedTable
                 .getPrimaryKeyColumns();
-//        StringBuilder sb = new StringBuilder();
         for (IntrospectedColumn introspectedColumn : introspectedColumns) {
             FullyQualifiedJavaType type = introspectedColumn
                     .getFullyQualifiedJavaType();
@@ -83,9 +83,29 @@ public class SelectByPrimaryKeyClientGenerator extends AbstractDaoMapperMethodGe
             sb.append(method.getParameters().get(0).getName());
             sb.append("); ");
             method.addBodyLine(sb.toString());
-
         } else {
-
+            StringBuilder sb = new StringBuilder();
+            String entityParaName = GenUtil.getGeneralEntityParamName(introspectedTable);
+            String entityTypeName = GenUtil.getEntityType(context, introspectedTable).getShortName();
+            sb.append(entityTypeName);
+            sb.append(" ").append(entityParaName).append(" = ").append(" new ").append(entityTypeName).append("();");
+            method.addBodyLine(sb.toString());
+            sb.setLength(0);
+            int i = 0;
+            for (IntrospectedColumn pkIntrospcectedColumn: introspectedColumns) {
+                sb.setLength(0);
+                sb.append(entityParaName).append(".set").append(StringUtil.capitalize(pkIntrospcectedColumn.getJavaProperty()))
+                        .append("(").append(method.getParameters().get(i).getName()).append(");");
+                i++;
+                method.addBodyLine(sb.toString());
+            }
+            sb.setLength(0);
+            sb.append("return ");
+            sb.append("findByProperty(\"" + GenUtil.getSelectByBeanMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE) + "\"");
+            sb.append(", ");
+            sb.append(entityParaName);
+            sb.append(").get(0); ");
+            method.addBodyLine(sb.toString());
         }
 
         topLevelClass.addImportedTypes(importedTypes);

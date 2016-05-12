@@ -27,6 +27,7 @@ import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.exception.InvalidConfigurationException;
 import org.mybatis.generator.ext.api.AdvaMergeShellCallback;
 import org.mybatis.generator.internal.DefaultShellCallback;
+import org.mybatis.generator.internal.ObjectFactory;
 
 import static org.junit.Assert.assertEquals;
 
@@ -36,9 +37,17 @@ public class MyBatisGeneratorExtTest {
     public void testGenerateMyBatis3() throws Exception {
         List<String> warnings = new ArrayList<String>();
         ConfigurationParser cp = new ConfigurationParser(warnings);
-        Configuration config = cp.parseConfiguration(this.getClass().getClassLoader().getResourceAsStream("generatorConfigExtTest.xml"));
+        Configuration config = cp.parseConfiguration(this.getClass().getClassLoader().getResourceAsStream("generatorConfigExtTest2.xml"));
 
-        ShellCallback shellCallback = new AdvaMergeShellCallback(true);
+        String mergeClz = config.getContexts().get(0).getProperty("mergeCallback");
+        ShellCallback shellCallback = null;
+        if (mergeClz == null) {
+            shellCallback = new DefaultShellCallback(true);
+        } else {
+            shellCallback = (ShellCallback) ObjectFactory
+                    .createInternalObject(mergeClz);
+        }
+
         try {
             MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, shellCallback, warnings);
             myBatisGenerator.generate(null);

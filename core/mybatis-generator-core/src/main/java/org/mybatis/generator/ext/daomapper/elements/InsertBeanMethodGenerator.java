@@ -40,8 +40,7 @@ public class InsertBeanMethodGenerator extends AbstractDaoMapperMethodGenerator 
         FullyQualifiedJavaType entityType = GenUtil.getEntityType(context, introspectedTable);
         method.setReturnType(entityType);
         importedTypes.add(entityType);
-        String entityName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
-        String entityParaName = StringUtil.lowerCase(entityName);
+        String entityParaName = GenUtil.getGeneralEntityParamName(introspectedTable);
 
         method.setName(GenUtil.getInsertBeanMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.DAO_TYPE));
         method.addParameter(new Parameter(GenUtil.getEntityType(context, introspectedTable), entityParaName));
