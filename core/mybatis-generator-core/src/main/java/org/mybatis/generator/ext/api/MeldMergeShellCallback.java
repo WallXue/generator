@@ -15,7 +15,10 @@
  */
 package org.mybatis.generator.ext.api;
 
+import org.mybatis.generator.exception.ShellException;
 import org.mybatis.generator.internal.DefaultShellCallback;
+
+import java.io.File;
 
 /**
  * 此方法的前提是机器上装有meld
@@ -30,5 +33,42 @@ public class MeldMergeShellCallback extends DefaultShellCallback {
         super(true);
     }
 
+
+    @Override
+    public String mergeJavaFile(String newFileSource, String existingFileFullPath, String[] javadocTags, String fileEncoding) throws ShellException {
+        try {
+            Runtime rt = Runtime.getRuntime();
+                    Process proc = rt.exec("meld ");
+                    int exitVal = proc.waitFor();
+            System.out.println("Process exitValue: " + 1);
+            return newFileSource;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    public static boolean exec(String command){
+//        CommandLine commandLine = CommandLine.parse(command);
+//        DefaultExecutor executor = new DefaultExecutor();
+//        int exitValue = DefaultExecutor.INVALID_EXITVALUE;
+//        ExecuteWatchdog watchdog = new ExecuteWatchdog(2000);
+//        executor.setWatchdog(watchdog);
+//        try {
+//            exitValue = executor.execute(commandLine);
+//        } catch (ExecuteException e) {
+//            exitValue = e.getExitValue();
+//        } catch (IOException e){
+//            System.err.println(e.getMessage());
+//        }
+//        System.out.println("Exit :" + exitValue);
+//        return (exitValue == 0);
+        return false;
+    }
+
+    @Override
+    public File getDirectory(String targetProject, String targetPackage)
+            throws ShellException {
+        return super.getDirectory(targetProject, targetPackage);
+    }
 
 }

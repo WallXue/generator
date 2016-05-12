@@ -34,7 +34,7 @@ public class SelectByPrimaryKeyClientGenerator extends AbstractDaoMapperMethodGe
         FullyQualifiedJavaType beanType = GenUtil.getEntityType(context, introspectedTable);
         importedTypes.add(beanType);
         method.setReturnType(beanType);
-        method.setName(GenUtil.getSelectByPrimaryKeyMethodName(introspectedTable));
+        method.setName(GenUtil.getSelectByPrimaryKeyMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.DAO_TYPE));
 
         List<IntrospectedColumn> introspectedColumns = introspectedTable
                 .getPrimaryKeyColumns();
