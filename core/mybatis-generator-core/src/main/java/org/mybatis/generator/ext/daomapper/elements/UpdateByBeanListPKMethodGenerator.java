@@ -58,16 +58,16 @@ public class UpdateByBeanListPKMethodGenerator extends AbstractDaoMapperMethodGe
         method.addBodyLine("int result = 0;");
         String eachItem = GenUtil.getGeneralEntityParamName(introspectedTable);
         sb.setLength(0);
-        sb.append("for (").append(GenUtil.getEntityName(introspectedTable)).append(" ").append(eachItem).append(method.getParameters().get(0).getName()).append(") {");
+        sb.append("for (").append(GenUtil.getEntityName(introspectedTable)).append(" ").append(eachItem).append(": ").append(method.getParameters().get(0).getName()).append(") {");
         method.addBodyLine(sb.toString());
 
         sb.setLength(0);
         sb.append("result = update(\"").append(GenUtil.getUpdateByBeanMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE)).append("\", ").append(eachItem).append(");");
         method.addBodyLine(sb.toString());
 
-        method.addBodyLine(" if (result == -1) {");
-        method.addBodyLine("    break;");
-        method.addBodyLine(" }");
+        method.addBodyLine("if (result == -1) {");
+        method.addBodyLine("break;");
+        method.addBodyLine("}");
         method.addBodyLine("}");
         method.addBodyLine("return result;");
 

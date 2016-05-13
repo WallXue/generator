@@ -105,7 +105,9 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         addMaxIdMethod(interfaze);
         addDeleteByPrimaryKeyMethod(interfaze);
         addInsertMethod(interfaze);
+        addInsertListMethod(interfaze);
         addUpdateMethod(interfaze);
+        addUpdateListMethod(interfaze);
         addSelectByPrimaryKeyMethod(interfaze);
         addSelectByBeanMethod(interfaze);
         addSelectCountMethod(interfaze);
@@ -140,7 +142,9 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         addMaxIdMethod(topLevelClass);
         addDeleteByPrimaryKeyMethod(topLevelClass);
         addInsertMethod(topLevelClass);
+        addInsertListMethod(topLevelClass);
         addUpdateMethod(topLevelClass);
+        addUpdateListMethod(topLevelClass);
         addSelectByPrimaryKeyMethod(topLevelClass);
         addSelectByBeanMethod(topLevelClass);
         addSelectCountMethod(topLevelClass);
@@ -177,6 +181,19 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
     }
 
     /**
+     * 新增List
+     */
+    protected void addInsertListMethod(JavaElement element) {
+        AbstractDaoMapperMethodGenerator methodGenerator = new InsertBeanListMethodGenerator();
+        initializeAndExecuteGenerator(methodGenerator);
+        if (element instanceof Interface) {
+            methodGenerator.addInterfaceElements((Interface)element);
+        } else if (element instanceof TopLevelClass){
+            methodGenerator.addTopLevelClassElements((TopLevelClass)element);
+        }
+    }
+
+    /**
      * 取最大id值， 当主键只有一个的时候
      */
     protected void addMaxIdMethod(JavaElement element) {
@@ -190,7 +207,7 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
     }
 
     /**
-     *
+     * 更新单个bean
      */
     protected void addUpdateMethod(JavaElement element) {
         AbstractDaoMapperMethodGenerator methodGenerator = new UpdateBeanMethodGenerator();
@@ -203,7 +220,20 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
     }
 
     /**
-     *
+     * 批量更新Bean List
+     */
+    protected void addUpdateListMethod(JavaElement element) {
+        AbstractDaoMapperMethodGenerator methodGenerator = new UpdateByBeanListPKMethodGenerator();
+        initializeAndExecuteGenerator(methodGenerator);
+        if (element instanceof Interface) {
+            methodGenerator.addInterfaceElements((Interface)element);
+        } else if (element instanceof TopLevelClass){
+            methodGenerator.addTopLevelClassElements((TopLevelClass)element);
+        }
+    }
+
+    /**
+     *  根据bean新增的方法
      */
     protected void addSelectByBeanMethod(JavaElement element) {
         AbstractDaoMapperMethodGenerator methodGenerator = new SelectByBeanMethodGenerator();
@@ -228,6 +258,9 @@ public class DaoMapperGenerator extends AbstractJavaClientGenerator {
         }
     }
 
+    /**
+     *
+     */
     protected void addSelectByBeanPageMethod(JavaElement element) {
         AbstractDaoMapperMethodGenerator methodGenerator = new SelectByBeanPageMethodGenerator();
         initializeAndExecuteGenerator(methodGenerator);

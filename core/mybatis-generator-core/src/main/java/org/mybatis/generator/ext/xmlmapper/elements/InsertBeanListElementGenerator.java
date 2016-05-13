@@ -30,7 +30,7 @@ public class InsertBeanListElementGenerator extends AbstractXmlElementGenerator 
         XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
 
         answer.addAttribute(new Attribute(
-                "id", GenUtil.getUpdateByBeanListMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE)));
+                "id", GenUtil.getInsertBeanListMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE)));
 
         FullyQualifiedJavaType parameterType;
         if (isSimple) {
