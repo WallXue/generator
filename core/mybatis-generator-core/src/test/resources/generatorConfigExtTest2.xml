@@ -6,9 +6,9 @@
 <generatorConfiguration>
 	<!--<classPathEntry-->
 		<!--location="C:/Users/Administrator/.m2/repository/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar" />-->
-	<!--<classPathEntry-->
-	 <!--location="E:\\java\\repository\\mysql\\mysql-connector-java\\5.1.34\\mysql-connector-java-5.1.34.jar" />-->
-	<classPathEntry location="F:\\maven_repository\\mysql\\mysql-connector-java\\5.1.34\\mysql-connector-java-5.1.34.jar" />
+	<classPathEntry
+	 location="E:\\java\\repository\\mysql\\mysql-connector-java\\5.1.34\\mysql-connector-java-5.1.34.jar" />
+	<!--<classPathEntry location="F:\\maven_repository\\mysql\\mysql-connector-java\\5.1.34\\mysql-connector-java-5.1.34.jar" />-->
 <!-- Instance库 库配置 -->
 	<context id="MySqlTables" targetRuntime="MyBatis3">
 		<property name="mergeCallback" value="org.mybatis.generator.ext.api.MeldMergeShellCallback" />
@@ -22,7 +22,7 @@
 		</commentGenerator>
 
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://mysql.master:8606/test" userId="test" password="test">
+			connectionURL="jdbc:mysql://mysql.master:8606/aaa" userId="test" password="test">
 		</jdbcConnection>
 
 		<javaTypeResolver>
@@ -47,7 +47,7 @@
 		</javaClientGenerator>
 
 		
-		<table tableName="base_app_version"
+		<table tableName="prod_attr"
 			enableCountByExample="false" enableSelectByExample="false"
 			enableUpdateByExample="false" enableDeleteByExample="false">
 			<property name="" value="" />

@@ -138,6 +138,24 @@ public class GenUtil {
     /**
      * @return 插入语句method Name
      */
+    public static String getInsertBeanListMethodName(IntrospectedTable introspectedTable, ENUM_METHOD_TYPE method_type) {
+        String propKey = method_type == ENUM_METHOD_TYPE.DAO_TYPE? INSERT_BEAN_METHODNAME:XML_INSERT_BEAN_METHODNAME;
+        String config = introspectedTable.getTableConfiguration().getProperty(propKey);
+        if (config != null)
+            return config;
+
+        if (method_type == ENUM_METHOD_TYPE.DAO_TYPE) {
+            return "add" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() +
+                    "s";
+        } else {
+            return "insert" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() +
+                    "List";
+        }
+    }
+
+    /**
+     * @return 插入语句method Name
+     */
     public static String getInsertBeanSelectiveMethodName(IntrospectedTable introspectedTable, ENUM_METHOD_TYPE method_type) {
         String propKey = method_type == ENUM_METHOD_TYPE.DAO_TYPE? INSERT_BEAN_SELECTIVE_METHODNAME:XML_INSERT_BEAN_SELECTIVE_METHODNAME;
         String config = introspectedTable.getTableConfiguration().getProperty(propKey);
@@ -190,9 +208,24 @@ public class GenUtil {
         return "select_where_sql";
     }
 
+
+    public static String getEntityName(IntrospectedTable introspectedTable) {
+        return introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+    }
+
     public static String getGeneralEntityParamName(IntrospectedTable introspectedTable) {
         String entityName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
         return StringUtil.uncapitalize(entityName);
+    }
+
+    public static String getGeneralEntityParamName4List(IntrospectedTable introspectedTable) {
+        String entityName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+        return StringUtil.uncapitalize(entityName) + "s";
+    }
+
+    public static String getGeneralEntityParamName4ListWithList(IntrospectedTable introspectedTable) {
+        String entityName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+        return "list" + StringUtil.capitalize(entityName);
     }
     /**
      * Gets the unique file name.

@@ -1,18 +1,3 @@
-/**
- *    Copyright 2006-2015 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package org.mybatis.generator.ext.xmlmapper.elements;
 
 import org.mybatis.generator.api.IntrospectedColumn;
@@ -29,29 +14,23 @@ import org.mybatis.generator.util.GenUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 
+/** <insert id="insertProdAttrList" parameterType="java.util.List">
  */
-public class InsertElementGenerator extends AbstractXmlElementGenerator {
+public class InsertBeanListElementGenerator extends AbstractXmlElementGenerator {
 
     private boolean isSimple;
 
-    public InsertElementGenerator(boolean isSimple) {
+    public InsertBeanListElementGenerator(boolean isSimple) {
         super();
         this.isSimple = isSimple;
     }
 
     @Override
     public void addElements(XmlElement parentElement) {
-//        if (!context.getPlugins().sqlMapInsertElementGenerated(answer,
-//                introspectedTable)) {
-//            return;
-//        }
-
-        XmlElement answer = new XmlElement("insert");
+        XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
 
         answer.addAttribute(new Attribute(
-                "id", GenUtil.getInsertBeanMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE)));
+                "id", GenUtil.getUpdateByBeanListMethodName(introspectedTable, GenUtil.ENUM_METHOD_TYPE.XML_TYPE)));
 
         FullyQualifiedJavaType parameterType;
         if (isSimple) {
